@@ -23,7 +23,7 @@ export const useTest = defineStore('test',{
       this.value = JSON.parse(localStorage.getItem("newValue"));
     },
     setSwagValue(newValue) {
-      this.value = newValue
+      this.value = newValue;
     }
   }
 })
