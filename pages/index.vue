@@ -8,14 +8,14 @@
         </div>
         <div class="col-sm" id="rightSide">
             <div class="text-center" style=" margin-top: 50vh;">
-  <Login-component/>
+  <UserLogin-component/>
 </div>
         </div>
     </div>
 </div>
 </template>
 <script>
-import loginComponent from '../components/login-component.vue'
+import loginComponent from '../components/user/login-component.vue'
 export default {
   components: { loginComponent },
   
