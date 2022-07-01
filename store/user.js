@@ -2,7 +2,7 @@
 import {watch} from "vue";
 import { defineStore } from 'pinia';
 
-export const useTest = defineStore('user',{
+export const userProfile = defineStore('user',{
 
 
   state: () => ({

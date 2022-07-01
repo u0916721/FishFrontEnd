@@ -1,17 +1,7 @@
 <template>
-<div class="container-fluid">
-    <div class="row" style="height: 100vh;">
-        <div class="col-sm" id ="leftSide">
-         <div class="text-center" style=" margin-top: 50vh;">
-  Just Browse
-</div>
-        </div>
         <div class="col-sm" id="rightSide">
-            <div class="text-center" style=" margin-top: 50vh;">
+          <button class="btn btn-primary">One</button>
   <UserLogin-component/>
-</div>
-        </div>
-    </div>
 </div>
 </template>
 <script>

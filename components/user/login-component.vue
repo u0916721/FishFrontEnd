@@ -13,8 +13,9 @@
         id="form2Example1"
         class="form-control"
         v-model="username"
+        @keyup.enter="logIn"
       />
-      <label class="form-label" for="form2Example1">Username</label>
+      <label class="form-label" for="form2Example1"  @keyup.enter="logIn">Username</label>
     </div>
 
     <!-- Password input -->
@@ -24,8 +25,9 @@
         id="form2Example2"
         class="form-control"
         v-model="password"
+        @keyup.enter="logIn"
       />
-      <label class="form-label" for="form2Example2">Password</label>
+      <label class="form-label" for="form2Example2"  @keyup.enter="logIn">Password</label>
     </div>
 
     <!-- 2 column grid layout for inline styling -->
@@ -38,7 +40,7 @@
     </div>
 
     <!-- Submit button -->
-    <button type="button" class="btn btn-primary btn-block mb-4" @click="logIn">
+    <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" @click="logIn"  @keyup.enter="logIn">
       Sign in
     </button>
 
@@ -52,10 +54,10 @@
 
 
 <script>
-import { useTest } from "~/store/user";
+import { userProfile } from "~/store/user";
 export default {
   setup() {
-    const theUser = useTest();
+    const theUser = userProfile();
     return {
       theUser,
     };
@@ -93,15 +95,21 @@ export default {
           .then((response) => {
             if (response.ok) {
               this.incorrect = false;
+                this.$router.push('/landing-page');
               return response.text();
             }
             this.incorrect = true;
             return response.text();
           })
           .then((result) => {
+            console.log("token parsed");
             return this.theUser.setNewTokenValue(JSON.parse(result).token); // Here we set the token value to the pinia store, We will also NEED to set the username and role here as well.
           }) 
-          .catch((error) => console.log("error", error));
+          .catch((error) => {
+            console.log("error", error);
+             this.$router.push('/');
+             return "";
+          });
       } catch (exception_var) {}
     },
     registered()
