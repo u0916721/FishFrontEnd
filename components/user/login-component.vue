@@ -1,55 +1,55 @@
 <template>
-  <form>
-    <div v-if="register"> 
+
+    <div class="hover:bg-gradient-to-r from-gray-100 to-green-100 flex-auto w-96 rounded hover:shadow-md hover:shadow-green-500/50">
+    <div class="py-2"></div>
+          <div v-if="register"> 
     <UserRegister-Component @registered ="registered"/>
     </div>
-    <div v-else>
-    <div v-if="incorrect">Wrong login try again.</div>
-    {{ theUser.userToken }}
-    <!-- Username input -->
-    <div class="form-outline mb-4">
-      <input
-        type="email"
-        id="form2Example1"
-        class="form-control"
-        v-model="username"
-        @keyup.enter="logIn"
-      />
-      <label class="form-label" for="form2Example1"  @keyup.enter="logIn">Username</label>
+      <form class="w-full max-w-sm">
+  <div class="md:flex md:items-center mb-6 px-2">
+    <div class="md:w-1/3">
+      <label class="block text-gray-600 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+        Username
+      </label>
+    </div>
+    <div class="md:w-2/3">
+      <input class="bg-white appearance-none border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500 hover:border-green-300" id="inline-full-name" type="text"  v-model="username"
+        @keyup.enter="logIn">
+    </div>
+  </div>
+  <div class="md:flex md:items-center mb-6 px-2">
+    <div class="md:w-1/3">
+      <label class="block text-gray-600 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-password">
+        Password
+      </label>
+    </div>
+    <div class="md:w-2/3">
+      <input class="bg-white appearance-none border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500 hover:border-green-300" id="inline-password" type="password"     v-model="password"
+        @keyup.enter="logIn">
+    </div>
+  </div>
+  <div class="md:flex md:items-center mb-6">
+    <div class="md:w-1/3"></div>
+    <label class="md:w-2/3 block text-gray-500 font-bold">
+         <div class="text-center">
+      <p>Not a member? <a class="underline text-blue-500 hover:text-blue-700" href="#!" @click="register = true;">Register</a></p>
+    </div>
+    </label>
+  </div>
+  <div class="flex items-center">
+    <div class="w-1/3 md:w-1/2 lg:w-1/2 xl:-1/2 2xl:-1/2"></div>
+    <div>
+      <button class="shadow bg-green-600 hover:bg-green-700 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-2 rounded " type="button" @click="logIn">
+        Log in
+      </button>
+      <div class = "py-2"></div>
+    </div>
+  </div>
+</form>
     </div>
 
-    <!-- Password input -->
-    <div class="form-outline mb-4">
-      <input
-        type="password"
-        id="form2Example2"
-        class="form-control"
-        v-model="password"
-        @keyup.enter="logIn"
-      />
-      <label class="form-label" for="form2Example2"  @keyup.enter="logIn">Password</label>
-    </div>
 
-    <!-- 2 column grid layout for inline styling -->
-    <div class="row mb-4">
-      <div class="col d-flex justify-content-center"></div>
-
-      <div class="col">
-        <!-- Simple link -->
-      </div>
-    </div>
-
-    <!-- Submit button -->
-    <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" @click="logIn"  @keyup.enter="logIn">
-      Sign in
-    </button>
-
-    <!-- Register buttons -->
-    <div class="text-center">
-      <p>Not a member? <a href="#!" @click="register = true;">Register</a></p>
-    </div>
-    </div>
-  </form>
+  
 </template>
 
 
