@@ -1,9 +1,16 @@
 
 <template>
   <div>
-    <div>clubs to browse</div>
-    <Finding-PageClique-Thumbnail v-for="club in cliquesToBrowse" :key="club.name + club.name" :name="club.name" :bio="club.bio" :profilePic="club.profilePic"/>
-  </div>
+           <div class="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-3 sm:">
+      <div class="row-span-6 p-4  bg-gradient-to-r from-teal-500 to-emerald-500 h-full rounded hover:border-solid hover:border-2 hover:border-indigo-600"><Finding-PageFilter-Sidebar/></div>
+    <Finding-PageClique-Thumbnail  v-for="club in cliquesToBrowse" :key="club.name + club.name" :name="club.name" :bio="club.bio" :profilePic="club.profilePic"/>
+      <Finding-PageClique-Thumbnail  v-for="club in cliquesToBrowse" :key="club.name + club.name" :name="club.name" :bio="club.bio" :profilePic="club.profilePic"/>
+          <Finding-PageClique-Thumbnail  v-for="club in cliquesToBrowse" :key="club.name + club.name" :name="club.name" :bio="club.bio" :profilePic="club.profilePic"/>
+      <Finding-PageClique-Thumbnail  v-for="club in cliquesToBrowse" :key="club.name + club.name" :name="club.name" :bio="club.bio" :profilePic="club.profilePic"/>
+    </div>
+  </div>        
+    
+    
 </template>
 
 <script>

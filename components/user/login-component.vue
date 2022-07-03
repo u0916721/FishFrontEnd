@@ -72,7 +72,7 @@ export default {
   },
   data() {
     return {
-      username: " ",
+      username: "",
       password: "",
       incorrect: false,
       register: false,
@@ -81,6 +81,8 @@ export default {
   methods: {
     // This method logs in the user and makes a request to the backend to do so., also need to be tied to enter as well.
     async logIn() {
+      console.log(this.username);
+      console.log(this.password);
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
 

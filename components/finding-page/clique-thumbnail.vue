@@ -1,15 +1,18 @@
 <template>
-  <div>
-    <div class="card"     tag="article"
-    style="max-width: 20rem; max-height: 20rem;  overflow-y: auto;">
-  <img  :src="profilePic" class="card-img-top" alt="the clubs profile picture">
-  <div class="card-body">
-    <h5 class="card-title">{{name}}</h5>
-    <p class="card-text">{{bio}}</p>
-    <a href="#" class="btn btn-primary" @click="goToClub">Go to club</a>
+<div class="max-w-sm rounded overflow-hidden shadow-lg transition delay-150 duration-300 md:ease-in-out  lg:ease-in-out  xl:ease-in-out  md:hover:scale-110 lg:hover:scale-110 xl:hover:scale-110 ">
+  <img class="w-full" :src="profilePic">
+  <div class="px-6 py-4">
+    <div class="font-bold text-xl mb-2b">{{name}}</div>
+    <p class="text-gray-700 text-base">
+      {{bio}}
+    </p>
+  </div>
+  <div class="px-6 pt-4 pb-2">
+           <button class="transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110  shadow bg-green-600 hover:bg-green-700 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-2 rounded " type="button" @click="logIn">
+        Enter
+      </button>
   </div>
 </div>
-  </div>
 </template>
  
 <script>
