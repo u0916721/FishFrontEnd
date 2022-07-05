@@ -8,8 +8,8 @@
     </p>
   </div>
   <div class="px-6 pt-4 pb-2">
-           <button class="transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110  shadow bg-green-600 hover:bg-green-700 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-2 rounded " type="button" @click="logIn">
-        Enter
+           <button class="transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110  shadow bg-green-600 hover:bg-green-700 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-2 rounded " type="button" @click="goToClub">
+      Enter
       </button>
   </div>
 </div>
@@ -31,9 +31,11 @@ export default {
   },
   methods: {
     // This method logs in the user and makes a request to the backend to do so., also need to be tied to enter as well.
-            goTOClub()
+            goToClub()
             {
                 console.log("going to club");
+                console.log(this.name);
+                 this.$router.push('/Clubs/' + this.name + '');
                 return " ";
             }
             },
