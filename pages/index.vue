@@ -12,7 +12,7 @@ import loginComponent from '../components/user/login-component.vue'
 export default {
   components: { loginComponent },
   
-mounted() { console.log('Test called')  }
+mounted() {   }
 }
 
 
