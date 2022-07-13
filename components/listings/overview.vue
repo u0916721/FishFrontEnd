@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="grid grid-cols-4 gap-4">
-        <ListingsSidebar-Menu/>
+        <ListingsSidebar-Menu :id="'SidebarMenu'" :catagories="listing.catagories"/>
         <ListingsSee-Listings class="col-span-3"/>
     </div>
 
@@ -20,22 +20,21 @@ export default {
   },
   data() {
     return {
+
     };
   },
     created()
   { 
-    console.log("printing out the listings created");
-    console.log(this.listing);
+
+
   },
   mounted()
   { 
-    console.log("printing out the listings");
-    console.log(this.listing);
+
   },
     computed()
   { 
-    console.log("printing out the listings computed");
-    console.log(this.listing);
+
   },
 }
 </script>

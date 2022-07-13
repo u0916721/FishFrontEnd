@@ -1,11 +1,11 @@
 <template>
-  <div> View listings</div>
+  
 </template>
 
 <script>
 import { userProfile } from "~/store/user";
 export default {
-     props:['catagories'],
+     props:['listing'],
   setup() {
     const theUser = userProfile();
     return {
@@ -14,11 +14,24 @@ export default {
   },
   data() {
     return {
+
     };
+  },
+    created()
+  { 
+
+
+  },
+  mounted()
+  { 
+
+  },
+    computed()
+  { 
+
   },
 }
 </script>
-
 <style>
 
 </style>

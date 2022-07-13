@@ -238,9 +238,7 @@ export default {
      };
     await this.getListings();
     await this.getCatagories();
-    console.log("printing");
-    console.log(this.listing);
-    this.loaded = true;
+    this.loaded = true; //Here we load the components since we have gotten all our data.
   },
 
   methods: {
@@ -262,7 +260,6 @@ export default {
       )
         .then((response) => response.text())
         .then((result) => {
-          console.log(result);
           this.listing.listings = JSON.parse(result);
           return result;
         })
@@ -279,15 +276,12 @@ export default {
       };
 
       await fetch(
-        "https://plaxbackendapi.azurewebsites.net//User/Cliques/" +
-          this.$route.params.id +
-          "/GetCliqueByName", // Might break it be careful
+      "https://plaxbackendapi.azurewebsites.net//Mod/Cliques/"+ this.$route.params.id +"/GetCatagoires", // Might break it be careful
         requestOptions
       )
         .then((response) => response.text())
         .then((result) => {
-          console.log(result);
-          this.listing.catagories = JSON.parse(result).catagories;
+          this.listing.catagories = JSON.parse(result);
           return result;
         })
         .catch((error) => console.log("error", error));

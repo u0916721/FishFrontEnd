@@ -121,13 +121,37 @@
 
     <div>
       Catagories
-      <div></div>
+    <ListingsCatagory :key="catagories.name" :catagories="catagories" :color="1"/>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { userProfile } from "~/store/user";
+export default {
+     props:['catagories'],
+  setup() {
+    const theUser = userProfile();
+    return {
+      theUser,
+    };
+  },
+  data() {
+    return {
+    };
+  },
+    created()
+  { 
+  },
+  mounted()
+  { 
+
+  },
+    computed()
+  { 
+
+  },
+}
 </script>
 
 <style>

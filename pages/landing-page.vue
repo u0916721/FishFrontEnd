@@ -72,11 +72,6 @@ export default {
     this.theUser.setValueFromStorage();
     await this.getAllCliquesName(); // We get all the clique names. That the user has or doesnt have.
     await this.getAllUserCliquesNames();
-
-    console.log("prinintg cliques");
-    console.log(this.cliquesNames);
-    console.log("prinintg  user cliques");
-    console.log(this.userCliquesNames);
     // Next we itterate through all the names adding it to an array, with each api call.
     this.cliquesToBrowse = [];
     for (const cliqueName of this.cliquesNames) {
@@ -90,17 +85,13 @@ export default {
       console.log(cliqueName);
       await this.getCliqueByName(false, cliqueName); //Passing in false here because we want to add it to the correct array.
     }
-    //console.log(this.cliquesNames);
-    console.log(this.cliquesToBrowse);
     this.displayedCliques = this.cliquesToBrowse;
-     console.log("prinintg  user cliques");
-      console.log(this.userCliquesToBrowse);
   },
   methods: {
 
     setCliquesToBrowseTrue()
     {
-            console.log("setting to true");
+          
              this.displayedCliques = this.cliquesToBrowse;
       this.displayCliquesToBrowse = true;
     },
@@ -108,7 +99,7 @@ export default {
     
     setCliquesToBrowseFalse()
     {
-      console.log("setting to false");
+    
        this.displayedCliques = this.userCliquesToBrowse;
       this.displayCliquesToBrowse = false;
     },
