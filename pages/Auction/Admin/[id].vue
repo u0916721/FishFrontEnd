@@ -18,43 +18,115 @@
         rounded
       "
       type="button"
-      @click="toggleSold = toggleSold * -1"
+      @click="viewingAuctionedItems = !viewingAuctionedItems"
     >
-      <div v-if="toggleSold > 0">switch to sold items</div>
+      <div v-if="viewingAuctionedItems > 0">switch to sold items</div>
       <div v-else>switch to items being auctioned</div>
     </button>
-    <div v-if="toggleSold > 0" :key="refreshKey">
-      <AuctAuction-Card
-        @swap="pushOnSwap"
-        @popFirst="popFirstItem"
-        @deleteSelling="deleteSellingItem"
-        @pushItemFront="pushItemFront"
-        v-for="(item, index) in items"
-        :key="item.itemName + item.itemName"
-        :itemName="item.itemName"
-        :fish="item.fish"
-        :seller="item.seller"
-        :buyer="item.buyer"
-        :soldfor="null"
-        :sold="false"
-        :admin="true"
-        :startNum="index"
+    <div class="pb-2"></div>
+    <button
+      class="
+        transition
+        delay-150
+        duration-300
+        ease-in-out
+        hover:-translate-y-1 hover:scale-110
+        shadow
+        bg-blue-600
+        hover:bg-blue-700
+        focus:shadow-outline focus:outline-none
+        text-white
+        font-bold
+        py-2
+        px-2
+        rounded
+      "
+      type="button"
+      @click="filter = !filter"
+    >
+      Filter
+    </button>
+    <div v-if="filter">
+      <AuctFilter
+        @filterItems="filterItems"
+        :inSoldItems="!viewingAuctionedItems"
       />
     </div>
+
+    <div v-if="isAdmin">
+      <div v-if="viewingAuctionedItems" :key="refreshKey">
+        <AuctAuction-Card
+          @swap="pushOnSwap"
+          @popFirst="popFirstItem"
+          @deleteSelling="deleteSellingItem"
+          @pushItemFront="pushItemFront"
+          v-for="(item, index) in items"
+          :key="item.itemName + item.itemName"
+          :itemName="item.itemName"
+          :fish="item.fish"
+          :seller="item.seller"
+          :buyer="item.buyer"
+          :soldfor="null"
+          :sold="false"
+          :admin="true"
+          :startNum="index"
+          :imageLink="item.imageLink"
+          :show="item.show"
+        />
+      </div>
+      <div v-else>
+        <AuctAuction-Card
+          @deleteSold="deleteSoldItem"
+          v-for="(item, index) in soldItems"
+          :key="
+            item.itemName + item.itemName + item.soldFor + item.fish + index
+          "
+          :itemName="item.itemName"
+          :fish="item.fish"
+          :seller="item.seller"
+          :buyer="item.buyer"
+          :soldFor="item.soldFor"
+          :sold="true"
+          :admin="true"
+          :startNum="index"
+          :imageLink="item.imageLink"
+          :show="item.show"
+        />
+      </div>
+    </div>
     <div v-else>
-      <AuctAuction-Card
-        @deleteSold="deleteSoldItem"
-        v-for="(item, index) in soldItems"
-        :key="item.itemName + item.itemName + item.soldFor + item.fish + index"
-        :itemName="item.itemName"
-        :fish="item.fish"
-        :seller="item.seller"
-        :buyer="item.buyer"
-        :soldFor="item.soldFor"
-        :sold="true"
-        :admin="true"
-        :startNum="index"
-      />
+      <div v-if="viewingAuctionedItems">
+        <AuctAuction-Card
+          v-for="(item, index) in items"
+          :key="item.itemName + item.itemName"
+          :itemName="item.itemName"
+          :fish="item.fish"
+          :seller="item.seller"
+          :buyer="item.buyer"
+          :soldfor="null"
+          :sold="false"
+          :admin="false"
+          :startNum="index"
+          :imageLink="item.imageLink"
+          :show="item.show"
+        />
+      </div>
+      <div v-else>
+        <AuctAuction-Card
+          v-for="(item, index) in soldItems"
+          :key="item.itemName + item.itemName"
+          :itemName="item.itemName"
+          :fish="item.fish"
+          :seller="item.seller"
+          :buyer="item.buyer"
+          :soldFor="item.soldFor"
+          :sold="true"
+          :admin="false"
+          :startNum="index"
+          :imageLink="item.imageLink"
+          :show="item.show"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -74,13 +146,17 @@ export default {
       items: [],
       soldItems: [],
       startNum: 1000,
-      toggleSold: 1,
+      viewingAuctionedItems: true,
       swapArray: [],
       refreshKey: 1,
+      isAdmin: false,
+      filter: false,
     };
   },
   created() {},
   async mounted() {
+    this.theUser.setValueFromStorage();
+    this.isAdmin = this.theUser.userToken != null; // Only admin will have or need JWT tokens. Admin still need valid tokens of course
     this.theUser.setValueFromStorage(); // Get the jwt token
     await this.getItems();
     await this.getSoldItems();
@@ -88,6 +164,13 @@ export default {
   },
   computed() {},
   methods: {
+    setItemsToShow(itemList) {
+      for (let i = 0; i < itemList.length; i++) {
+        console.log(itemList[i]);
+        itemList[i].show = true;
+        console.log(itemList[i]);
+      }
+    },
     async getItems() {
       var myHeaders = new Headers();
 
@@ -104,8 +187,8 @@ export default {
       )
         .then((response) => response.text())
         .then((result) => {
-          console.log("getting item");
           this.items = JSON.parse(result);
+          this.setItemsToShow(this.items);
           return result;
         })
         .catch((error) => console.log("error", error));
@@ -127,6 +210,7 @@ export default {
         .then((response) => response.text())
         .then((result) => {
           this.soldItems = JSON.parse(result);
+          this.setItemsToShow(this.soldItems);
           return result;
         })
         .catch((error) => console.log("error", error));
@@ -291,12 +375,22 @@ export default {
         })
         .catch((error) => console.log("error", error));
     },
-    async pushItemFront(index) {
+    async getIndexOfItemsName(itemName) {
+      // Get the valid index of said item
+      for (let i = 0; i < this.items.length; i++) {
+        if (this.items[i].itemName == itemName) {
+          return i;
+        }
+      }
+    },
+    async pushItemFront(itemName, index) {
       console.log("calling push item front");
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
       myHeaders.append("Authorization", "Bearer " + this.theUser.userToken);
-
+      // Add helper method that gets valid index of array
+      let i = await this.getIndexOfItemsName(itemName);
+      console.log("this is i " + i + " this is index " + index);
       var raw = JSON.stringify(index);
 
       var requestOptions = {
@@ -313,11 +407,68 @@ export default {
         .then((response) => response.text())
         .then((result) => {
           let temp = this.items[index];
-           var removed = this.items.splice(index, 1);
-           this.items.unshift(temp);
-          console.log(result)
-          })
+          var removed = this.items.splice(index, 1);
+          this.items.unshift(temp);
+          console.log(result);
+        })
         .catch((error) => console.log("error", error));
+    },
+
+    filterItems(selection, searchString) {
+      console.log(selection);
+      // lets not deal with varience in case
+      searchString = searchString.toLowerCase();
+      let selectedItemArray = this.items;
+      if (this.viewingAuctionedItems) {
+        let selectedItemArray = this.items;
+      } else {
+        let selectedItemArray = this.soldItems;
+      }
+      if (selection == "Item Name") {
+        this.filterByName(selectedItemArray, searchString);
+      } else if (selection == "Seller Name/ID") {
+        this.filterBySeller(selectedItemArray, searchString);
+      } else if (selection == "Fish") {
+        this.filterByFish(selectedItemArray, searchString);
+      } else if (selection == "Buyer") {
+        this.filterByBuyer(selectedItemArray, searchString);
+      }
+    },
+    filterByName(itemList, searchString) {
+      for (let i = 0; i < itemList.length; i++) {
+        if (itemList[i].itemName.toLowerCase().includes(searchString)) {
+          itemList[i].show = true;
+        } else {
+          itemList[i].show = false;
+        }
+      }
+    },
+    filterBySeller(itemList, searchString) {
+      for (let i = 0; i < itemList.length; i++) {
+        if (itemList[i].seller.toLowerCase().includes(searchString)) {
+          itemList[i].show = true;
+        } else {
+          itemList[i].show = false;
+        }
+      }
+    },
+    filterByFish(itemList, searchString) {
+      for (let i = 0; i < itemList.length; i++) {
+        if (itemList[i].fish.toLowerCase().includes(searchString)) {
+          itemList[i].show = true;
+        } else {
+          itemList[i].show = false;
+        }
+      }
+    },
+     filterByBuyer(itemList, searchString) {
+      for (let i = 0; i < itemList.length; i++) {
+        if (itemList[i].buyer.toLowerCase().includes(searchString)) {
+          itemList[i].show = true;
+        } else {
+          itemList[i].show = false;
+        }
+      }
     },
   },
 };

@@ -35,6 +35,8 @@
         :sold="false"
         :admin="false"
         :startNum="index"
+        :imageLink="item.imageLink"
+        :show="item.show"
       />
     </div>
     <div v-else>
@@ -49,6 +51,8 @@
         :sold="true"
         :admin="false"
         :startNum="index"
+        :imageLink="item.imageLink"
+        :show="item.show"
       />
     </div>
   </div>
@@ -74,12 +78,22 @@ export default {
   },
   created() {},
   async mounted() {
+    this.theUser.setValueFromStorage();
+    console.log(this.theUser.userToken == null); 
     await this.getItems();
     await this.getSoldItems();
     // setInterval(this.getItems, 10000);
   },
   computed() {},
   methods: {
+        setItemsToShow(itemList)
+    {
+      for(let i = 0; i < itemList.length; i++)
+      {console.log(itemList[i]);
+        itemList[i].show = true;
+        console.log(itemList[i]);
+      }
+    },
     async getItems() {
       var myHeaders = new Headers();
 
@@ -96,8 +110,8 @@ export default {
       )
         .then((response) => response.text())
         .then((result) => {
-          console.log("calling");
           this.items = JSON.parse(result);
+          this.setItemsToShow(this.items);
           return result;
         })
         .catch((error) => console.log("error", error));
@@ -119,6 +133,7 @@ export default {
         .then((response) => response.text())
         .then((result) => {
           this.soldItems = JSON.parse(result);
+          this.setItemsToShow(this.soldItems);
           return result;
         })
         .catch((error) => console.log("error", error));

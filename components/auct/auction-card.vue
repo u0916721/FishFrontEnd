@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-1 pt-1 pl-2 pr-2 flex justify-center">
+  <div v-if="this.show" class="pb-1 pt-1 pl-2 pr-2 flex justify-center">
     <div v-if="loaded">
       <div
         class="
@@ -13,7 +13,7 @@
           'border-solid border-2 border-indigo-600 colorSwag': startNum == 0,
         }"
       >
-        <img class="w-full" :src="imageLink" :alt="itemName" />
+        <img class="w-full" :src="imageLinkItem" :alt="itemName" />
         <div class="px-6 py-4">
           <div class="font-bold text-xl mb-1 text-center">{{ itemName }}</div>
           <div class="font-medium text-xl mb-1">Seller - {{ seller }}</div>
@@ -67,7 +67,7 @@
                 rounded
               "
               type="button"
-              @click="this.$emit('pushItemFront', startNum)"
+              @click="this.$emit('pushItemFront', itemName, startNum)"
             >
               push item to front
             </button>
@@ -90,7 +90,7 @@
                 rounded
               "
               type="button"
-              @click="selling = true"
+              @click="selling = !selling;"
             >
               sell
             </button>
@@ -274,6 +274,8 @@ export default {
     "admin",
     "sold",
     "startNum",
+    "imageLink",
+    "show"
   ],
   setup() {
     const theUser = userProfile();
@@ -283,7 +285,7 @@ export default {
   },
   data() {
     return {
-      imageLink: "",
+      imageLinkItem: "",
       fishInfo: "",
       loaded: false,
       swapClicked: 1,
@@ -311,7 +313,7 @@ export default {
         .then((response) => response.text())
         .then((result) => {
           var theFish = JSON.parse(result);
-          this.imageLink = theFish.pictures[0];
+          this.imageLinkItem = this.imageLink;
           this.fishInfo = "Size " + theFish.size + theFish.waterConditions;
           return result;
         })
