@@ -16,6 +16,7 @@
         py-2
         px-2
         rounded
+        cursor-zoom-in
       "
       type="button"
       @click="toggleSold = toggleSold * -1"
