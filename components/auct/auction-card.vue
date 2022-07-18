@@ -277,7 +277,7 @@
     </div>
     <div v-else @click="showImage = false">
 <img
-              class="object-cover cursor-zoom-out"
+              class="flex justify-center object-cover cursor-zoom-out"
               :src="imageLinkItem"
               :alt="itemName"
               @click="showImage = false"

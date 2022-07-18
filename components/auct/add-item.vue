@@ -276,7 +276,7 @@
         :soldfor="null"
         :sold="false"
         :admin="false"
-        :startNum="j4534j"
+        :startNum="totalItems.length"
         :imageLink="imageLink"
         :show="true"
         :description="description"
@@ -288,7 +288,7 @@
 <script>
 import { userProfile } from "~/store/user";
 export default {
-  props: ["listing", "fishNames"],
+  props: ["totalItems", "fishNames","items"],
   setup() {
     const theUser = userProfile();
     return {
@@ -348,10 +348,10 @@ export default {
         .then((result) => {
           if (responseOk) {
             // We can emit and clear the fields!.
-            this.ItemName = "";
-            this.Fish = "";
-            this.Description = "";
-            this.Seller = "";
+            this.itemName = "";
+            this.fish = "";
+            this.description = "";
+            this.seller = "";
             this.imageLink = "https://aquariumadviser.com/wp-content/uploads/2019/05/Exotic-and-Cool-Freshwater-Aquarium-Fish.jpg";
             this.refreshKeyPreview = this.refreshKeyPreview + 1;
             console.log(raw);

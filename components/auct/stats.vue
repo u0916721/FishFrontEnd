@@ -55,11 +55,13 @@
       >
         Get info
       </button>
-      <div class="w-full px-3 mb-6 md:mb-0" v-if="displayStats">
-        <p>Spent: {{ spent }}</p>
-        <p>Made: {{ made }}</p>
-        <div v-if="itemsBought.length > 0">
-          <p>you have bought the following items</p>
+      <div class="w-full px-3 mb-6 md:mb-0 py-2" v-if="displayStats">
+        <p class="text-center font-bold bg-green-800 text-white rounded-full"> Spent: ${{ spent }}</p>
+        <div class="pb-2"></div>
+        <p class="text-center font-bold bg-green-800 text-white rounded-full"> Made: ${{ made }}</p>
+        <div class="pb-2"></div>
+        <div v-if="itemsBought.length > 0" class="pb-2">
+          <p class="text-center font-bold funBackGround text-white rounded-full">you have bought the following items</p>
           <AuctAuction-Card
             v-for="(item, index) in itemsBought"
             :key="item.itemName + item.itemName + index"
@@ -70,14 +72,16 @@
             :soldFor="item.soldFor"
             :sold="true"
             :admin="false"
-            :startNum="index"
+            :startNum="item.startNum"
             :imageLink="item.imageLink"
             :show="true"
             :description="item.description"
           />
+         
         </div>
+         <div v-else class="pb-2"> <p class="text-center font-bold funBackGround text-white rounded-full">you have yet to buy anything</p></div>
         <div v-if="itemsSold.length > 0">
-          <p v-if="itemsSold.length > 0">you have sold the following items</p>
+          <p class="text-center" v-if="itemsSold.length > 0">you have sold the following items</p>
           <AuctAuction-Card
             v-for="(item, index) in itemsSold"
             :key="item.itemName + item.itemName + index"
@@ -89,14 +93,14 @@
             :sold="true"
             :admin="false"
             :startNum="index"
-            :imageLink="item.imageLink"
+            :imageLink="item.startNum"
             :show="true"
             :description="item.description"
           />
         </div>
-        <div v-if="itemsYetToSell.length > 0">
-          <p v-if="itemsYetToSell.length > 0">
-            you have sold the following items
+        <div v-if="userUnsoldItems.length > 0" class="pb-2">
+          <p class="text-center text-center font-bold funBackGround text-white rounded-full" v-if="userUnsoldItems.length > 0">
+            you have yet to sell the following items
           </p>
           <AuctAuction-Card
             v-for="(item, index) in userUnsoldItems"
@@ -108,7 +112,7 @@
             :soldFor="item.soldFor"
             :sold="false"
             :admin="false"
-            :startNum="index"
+            :startNum="item.startNum"
             :imageLink="item.imageLink"
             :show="true"
             :description="item.description"
@@ -146,23 +150,21 @@ export default {
   methods: {
     getStats() {
       this.displayStats = true;
-      if (this.auctionID == "") {
-        this.auctionID = " ";
-      }
+      this.made = 0;
+      this.spent = 0;
+      this.itemsSold = [];
+      this.itemsBought = [];
+      this.userUnsoldItems = [];
       for (let i = 0; i < this.soldItems.length; i++) {
-        console.log("printing out the sold");
-        console.log(this.soldItems[i].seller == "");
-        if (this.soldItems[i].seller == "") {
-          this.soldItems[i].seller == "A";
-        }
-         console.log(this.soldItems[i].seller == "");
         if (this.soldItems[i].seller == this.auctionID) {
           console.log("printing out the sold wekjwk");
+          this.soldItems[i].startNum = i + 1;
           this.itemsSold.push(this.soldItems[i]);
           // Also add it to the spent amount
           this.made = this.made + this.soldItems[i].soldFor;
         }
-        if (this.itemsBought[i].seller == this.auctionID) {
+        if (this.soldItems[i].buyer == this.auctionID) {
+            this.soldItems[i].startNum = i + 1;
           this.itemsBought.push(this.soldItems[i]);
           // Also add it to the sold amount
           this.spent = this.spent + this.soldItems[i].soldFor;
@@ -170,17 +172,34 @@ export default {
       }
       // Now get users unsold items
       for (let i = 0; i < this.itemsYetToSell.length; i++) {
-        if (this.itemsYetToSell[i].seller == "") {
-          this.itemsYetToSell[i].seller == "A";
-        }
+   
         if (this.itemsYetToSell[i].seller == this.auctionID) {
-          this.userUnsoldItems.push(this.soldItems[i]);
+            this.itemsYetToSell[i].startNum = i + 1;
+          this.userUnsoldItems.push(this.itemsYetToSell[i]);
         }
       }
+      console.log("success");
     },
   },
 };
 </script>
 
 <style>
+.funBackGround {
+  background: linear-gradient(-47deg, #000000, #4c00ff, #8400ff, #00ff55);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
 </style>

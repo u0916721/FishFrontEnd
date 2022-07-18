@@ -76,6 +76,7 @@
     <div v-if="addItem">
       <AuctAdd-Item
         @addNewItem="addNewItem"
+        :totalItems="items"
         :inSoldItems="!viewingAuctionedItems"
         :fishNames="fishNames"
       />
