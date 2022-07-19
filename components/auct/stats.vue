@@ -72,7 +72,7 @@
             :soldFor="item.soldFor"
             :sold="true"
             :admin="false"
-            :startNum="item.startNum"
+            :startNum="item.startNum - 1"
             :imageLink="item.imageLink"
             :show="true"
             :description="item.description"
@@ -81,7 +81,7 @@
         </div>
          <div v-else class="pb-2"> <p class="text-center font-bold funBackGround text-white rounded-full">you have yet to buy anything</p></div>
         <div v-if="itemsSold.length > 0">
-          <p class="text-center" v-if="itemsSold.length > 0">you have sold the following items</p>
+          <p class="text-center font-bold funBackGround text-white rounded-full" v-if="itemsSold.length > 0">you have sold the following items</p>
           <AuctAuction-Card
             v-for="(item, index) in itemsSold"
             :key="item.itemName + item.itemName + index"
@@ -93,7 +93,7 @@
             :sold="true"
             :admin="false"
             :startNum="index"
-            :imageLink="item.startNum"
+            :imageLink="item.startNum - 1"
             :show="true"
             :description="item.description"
           />
@@ -112,7 +112,7 @@
             :soldFor="item.soldFor"
             :sold="false"
             :admin="false"
-            :startNum="item.startNum"
+            :startNum="item.startNum - 1"
             :imageLink="item.imageLink"
             :show="true"
             :description="item.description"

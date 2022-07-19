@@ -269,7 +269,7 @@
       </label>
       <AuctAuction-Card
         :key="refreshKeyPreview"
-        :itemName="itemName"
+        :itemName="itemName + '%'"
         :fish="fish"
         :seller="seller"
         :buyer="buyer"
@@ -351,7 +351,7 @@ export default {
             this.itemName = "";
             this.fish = "";
             this.description = "";
-            this.seller = "";
+           // this.seller = ""; lets not clear the seller so that we can add one after another
             this.imageLink = "https://aquariumadviser.com/wp-content/uploads/2019/05/Exotic-and-Cool-Freshwater-Aquarium-Fish.jpg";
             this.refreshKeyPreview = this.refreshKeyPreview + 1;
             console.log(raw);
@@ -363,12 +363,9 @@ export default {
         })
         .catch((error) => alert(error));
 
-      if (responseOk) {
-        // Emit here, and clear fields
-        console.log("fdsjklfhsjlfh");
-      }
     },
     getFishInfo() {
+      
       if (this.selected == "Select One" || this.selected == "") {
         return;
       }
@@ -390,6 +387,7 @@ export default {
           let tempInfo = JSON.parse(result);
           this.imageLink = tempInfo.pictures[0];
           this.fish = tempInfo.name;
+          this.itemName = tempInfo.name;
           this.description = tempInfo.size + " " + tempInfo.waterConditions;
           this.refreshKeyPreview = this.refreshKeyPreview + 1;
           return result;

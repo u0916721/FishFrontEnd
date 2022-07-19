@@ -18,7 +18,11 @@
         rounded
       "
       type="button"
-      @click="viewingAuctionedItems = !viewingAuctionedItems; addItem = false; displayAuctionStats= false;"
+      @click="
+        viewingAuctionedItems = !viewingAuctionedItems;
+        addItem = false;
+        displayAuctionStats = false;
+      "
     >
       <div v-if="viewingAuctionedItems > 0">switch to sold items</div>
       <div v-else>switch to items being auctioned</div>
@@ -68,11 +72,11 @@
       type="button"
       @click="displayAuctionStats = !displayAuctionStats"
     >
-     Auction Stats
+      Auction Stats
     </button>
-  <div v-if="displayAuctionStats">
-    <AuctStats :soldItems="soldItems" :itemsYetToSell="items"/>
-  </div>
+    <div v-if="displayAuctionStats">
+      <AuctStats :soldItems="soldItems" :itemsYetToSell="items" />
+    </div>
     <div v-if="addItem">
       <AuctAdd-Item
         @addNewItem="addNewItem"
@@ -119,6 +123,7 @@
           @popFirst="popFirstItem"
           @deleteSelling="deleteSellingItem"
           @pushItemFront="pushItemFront"
+          @updateItem="updateItem"
           v-for="(item, index) in items"
           :key="item.itemName + item.itemName"
           :itemName="item.itemName"
@@ -137,6 +142,7 @@
       <div v-else>
         <AuctAuction-Card
           @deleteSold="deleteSoldItem"
+          @updateItem="updateItem"
           v-for="(item, index) in soldItems"
           :key="
             item.itemName + item.itemName + item.soldFor + item.fish + index
@@ -259,16 +265,14 @@ export default {
         .then((response) => response.text())
         .then((result) => {
           this.fishNames = JSON.parse(result);
-          
+
           return result;
         })
         .catch((error) => console.log("error", error));
     },
     setItemsToShow(itemList) {
       for (let i = 0; i < itemList.length; i++) {
-   
         itemList[i].show = true;
-       
       }
     },
     async getItems() {
@@ -282,7 +286,9 @@ export default {
       };
 
       await fetch(
-        "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/" + this.$route.params.id + "/GetItems",
+        "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/" +
+          this.$route.params.id +
+          "/GetItems",
         requestOptions
       )
         .then((response) => response.text())
@@ -304,7 +310,9 @@ export default {
       };
 
       fetch(
-        "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/" + this.$route.params.id + "/GetSoldItems",
+        "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/" +
+          this.$route.params.id +
+          "/GetSoldItems",
         requestOptions
       )
         .then((response) => response.text())
@@ -317,7 +325,6 @@ export default {
     },
 
     async swap() {
-   
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
       myHeaders.append("Authorization", "Bearer " + this.theUser.userToken);
@@ -335,12 +342,13 @@ export default {
       };
 
       fetch(
-        "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/" +  this.$route.params.id + "/SwapItem",
+        "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/" +
+          this.$route.params.id +
+          "/SwapItem",
         requestOptions
       )
         .then((response) => response.text())
         .then((result) => {
-          
           this.getSoldItems(); // Here we referesh
           // window.location.reload();
           return result;
@@ -364,6 +372,7 @@ export default {
       }
     },
     async popFirstItem(buyer, amount) {
+      console.log(amount);
       var myHeaders = new Headers();
       myHeaders.append("Authorization", "Bearer " + this.theUser.userToken);
 
@@ -374,7 +383,9 @@ export default {
       };
 
       fetch(
-        "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/" + this.$route.params.id +  "/PopItem?amount=" +
+        "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/" +
+          this.$route.params.id +
+          "/PopItem?amount=" +
           amount +
           "&buyer=" +
           buyer,
@@ -384,7 +395,7 @@ export default {
         .then((result) => {
           // Shallow change the array for the front end
           this.items[0].buyer = buyer;
-          this.items[0].amount = amount;
+          this.items[0].soldFor = amount;
           this.soldItems.push(this.items[0]);
           this.items = this.items.slice(1); // Poping the first item from the array
           return result;
@@ -402,7 +413,9 @@ export default {
       };
 
       fetch(
-        "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/" +  this.$route.params.id + "/DeleteItemFromSold?itemIndex=" +
+        "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/" +
+          this.$route.params.id +
+          "/DeleteItemFromSold?itemIndex=" +
           index,
         requestOptions
       )
@@ -447,7 +460,9 @@ export default {
       };
 
       fetch(
-        "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/" + this.$route.params.id + "/DeleteItemFromSold?itemIndex=" +
+        "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/" +
+          this.$route.params.id +
+          "/DeleteItemFromSold?itemIndex=" +
           index,
         requestOptions
       )
@@ -482,7 +497,9 @@ export default {
       };
 
       fetch(
-        "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/" + this.$route.params.id + "/PutItemFront",
+        "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/" +
+          this.$route.params.id +
+          "/PutItemFront",
         requestOptions
       )
         .then((response) => response.text())
@@ -548,6 +565,80 @@ export default {
           itemList[i].show = false;
         }
       }
+    },
+    updateItem(
+      startNum,
+      sold,
+      fish,
+      itemName,
+      seller,
+      buyer,
+      soldFor,
+      imageLink,
+      description
+    ) {
+      console.log(this.soldItems);
+      let selectedItemArray = this.items;
+      let endString = "UpdateItemSelling";
+      if (this.viewingAuctionedItems) {
+         selectedItemArray = this.items;
+        endString = "UpdateItemSelling";
+      } else {
+        console.log("went");
+         selectedItemArray = this.soldItems;
+        endString = "UpdateItemSold";
+      }
+      console.log(soldFor);
+      console.log(selectedItemArray);
+      let tempName = selectedItemArray[startNum].itemName;
+      // This for a shallow front end copy
+      selectedItemArray[startNum].sold = sold;
+      selectedItemArray[startNum].fish = fish;
+      selectedItemArray[startNum].seller = seller;
+      selectedItemArray[startNum].imageLink = imageLink;
+      selectedItemArray[startNum].itemName = itemName; // Might need to check on this, but doesnt matter after a reload
+      selectedItemArray[startNum].buyer = buyer;
+      selectedItemArray[startNum].soldFor = soldFor;
+      selectedItemArray[startNum].description = description;
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append("Authorization", "Bearer " + this.theUser.userToken);
+
+      var raw = JSON.stringify({
+        id: null,
+        ItemName: itemName,
+        Fish: fish,
+        SoldFor: soldFor,
+        Seller: seller,
+        Buyer: buyer,
+        ImageLink: imageLink,
+        Description: description,
+      });
+
+      var requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      fetch(
+        "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/" +
+          this.$route.params.id +
+          "/" +
+          tempName +
+          "/" +
+          endString,
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((result) => {
+          console.log("Printing the result");
+          console.log(result);
+          selectedItemArray[startNum].itemName = result;
+          return result;
+        })
+        .catch((error) => console.log("error", error));
     },
   },
 };

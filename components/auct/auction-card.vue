@@ -22,15 +22,16 @@
               :src="imageLinkItem"
               :alt="itemName"
               @click="showImage = true"
+              loading="lazy"
             />
             <div class="px-6 py-4">
               <div class="font-bold text-xl mb-1 text-center">
-                {{ itemName }}
+                {{ itemName.split('%')[0] }}
               </div>
               <div class="font-medium text-xl mb-1">Seller - {{ seller }}</div>
               <div class="font-medium text-xl mb-1">Fish - {{ fish }}</div>
               <p class="text-gray-700 text-base">{{ description }}</p>
-              <p class="text-gray-700 text-base">
+              <p v-if="!sold" class="text-gray-700 text-base">
                 place in line - {{ startNum + 1 }}
               </p>
             </div>
@@ -61,9 +62,36 @@
               >
                 swap
               </button>
+              <div class="px-2 pb-2"></div>
+              <button
+                v-if="admin"
+                class="
+                  transition
+                  delay-150
+                  duration-300
+                  ease-in-out
+                  hover:-translate-y-1 hover:scale-110
+                  shadow
+                  bg-red-500
+                  hover:bg-red-600
+                  focus:shadow-outline focus:outline-none
+                  text-white
+                  font-bold
+                  py-2
+                  px-2
+                  rounded
+                "
+                type="button"
+                @click="
+                  editing = !editing;
+                  selling = false;
+                "
+              >
+                edit item
+              </button>
               <div class="pl-4 pb-2"></div>
               <button
-                v-if="startNum != 0"
+                v-if="startNum != 0 && !sold"
                 class="
                   transition
                   delay-150
@@ -104,10 +132,16 @@
                     rounded
                   "
                   type="button"
-                  @click="selling = !selling"
+                  @click="
+                    selling = !selling;
+                    editing = false;
+                  "
                 >
                   sell
                 </button>
+
+                <div class="pb-2"></div>
+
                 <div class="pl-2 pb-2"></div>
               </div>
             </div>
@@ -146,6 +180,7 @@
           >
             delete sold item
           </button>
+
           <button
             v-else-if="admin"
             class="
@@ -165,11 +200,15 @@
               rounded
             "
             type="button"
-            @click="this.$emit('deleteSelling', startNum)"
+            @click="
+              editing = false;
+              this.$emit('deleteSelling', startNum);
+            "
           >
             delete item
           </button>
         </div>
+
         <div v-if="selling">
           <form class="pl-4 w-full max-w-lg">
             <div class="flex flex-wrap -mx-3 mb-6">
@@ -273,15 +312,307 @@
             </div>
           </form>
         </div>
+
+        <div class="pb-6"></div>
+
+        <div v-if="editing">
+          <form class="pl-4 w-full max-w-lg">
+            <div class="flex flex-wrap -mx-3 mb-6">
+
+
+              <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label
+                  class="
+                    block
+                    uppercase
+                    tracking-wide
+                    text-gray-700 text-xs
+                    font-bold
+                    mb-2
+                  "
+                  for="grid-first-name"
+                >
+                  Item Name
+                </label>
+                <input
+                  class="
+                    appearance-none
+                    block
+                    w-full
+                    bg-gray-200
+                    text-gray-700
+                    border border-red-500
+                    rounded
+                    py-3
+                    px-4
+                    mb-3
+                    leading-tight
+                    focus:outline-none focus:bg-white
+                  "
+                  id="grid-buyer"
+                  type="text"
+                  placeholder="Seller"
+                  v-model="itemName"
+                  @keypress="itemDisplayedName = itemName"
+                />
+              </div>
+
+
+              <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label
+                  class="
+                    block
+                    uppercase
+                    tracking-wide
+                    text-gray-700 text-xs
+                    font-bold
+                    mb-2
+                  "
+                  for="grid-first-name"
+                >
+                  seller
+                </label>
+                <input
+                  class="
+                    appearance-none
+                    block
+                    w-full
+                    bg-gray-200
+                    text-gray-700
+                    border border-red-500
+                    rounded
+                    py-3
+                    px-4
+                    mb-3
+                    leading-tight
+                    focus:outline-none focus:bg-white
+                  "
+                  id="grid-buyer"
+                  type="text"
+                  placeholder="Seller"
+                  v-model="seller"
+                />
+              </div>
+
+              <div v-if="sold" class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label
+                  class="
+                    block
+                    uppercase
+                    tracking-wide
+                    text-gray-700 text-xs
+                    font-bold
+                    mb-2
+                  "
+                  for="grid-first-name"
+                >
+                  buyer
+                </label>
+                <input
+                  class="
+                    appearance-none
+                    block
+                    w-full
+                    bg-gray-200
+                    text-gray-700
+                    border border-red-500
+                    rounded
+                    py-3
+                    px-4
+                    mb-3
+                    leading-tight
+                    focus:outline-none focus:bg-white
+                  "
+                  id="grid-buyer"
+                  type="text"
+                  placeholder="Buyer"
+                  v-model="buyer"
+                />
+              </div>
+
+              <div v-if="sold" class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label
+                  class="
+                    block
+                    uppercase
+                    tracking-wide
+                    text-gray-700 text-xs
+                    font-bold
+                    mb-2
+                  "
+                  for="grid-first-name"
+                >
+                  sold for
+                </label>
+                <input
+                  class="
+                    appearance-none
+                    block
+                    w-full
+                    bg-gray-200
+                    text-gray-700
+                    border border-red-500
+                    rounded
+                    py-3
+                    px-4
+                    mb-3
+                    leading-tight
+                    focus:outline-none focus:bg-white
+                  "
+                  id="grid-buyer"
+                  type="number"
+                  
+                  v-model="soldFor"
+                />
+              </div>
+
+              <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label
+                  class="
+                    block
+                    uppercase
+                    tracking-wide
+                    text-gray-700 text-xs
+                    font-bold
+                    mb-2
+                  "
+                  for="grid-first-name"
+                >
+                  fish
+                </label>
+                <input
+                  class="
+                    appearance-none
+                    block
+                    w-full
+                    bg-gray-200
+                    text-gray-700
+                    border border-red-500
+                    rounded
+                    py-3
+                    px-4
+                    mb-3
+                    leading-tight
+                    focus:outline-none focus:bg-white
+                  "
+                  id="grid-buyer"
+                  type="text"
+                  placeholder="Name Of Fish"
+                  v-model="fish"
+                />
+              </div>
+
+              <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label
+                  class="
+                    block
+                    uppercase
+                    tracking-wide
+                    text-gray-700 text-xs
+                    font-bold
+                    mb-2
+                  "
+                  for="grid-first-name"
+                >
+                  description
+                </label>
+                <textarea
+                  rows="4"
+                  class="
+                    appearance-none
+                    block
+                    w-full
+                    bg-gray-200
+                    text-gray-700
+                    border border-red-500
+                    rounded
+                    py-3
+                    px-4
+                    mb-3
+                    leading-tight
+                    focus:outline-none focus:bg-white
+                  "
+                  id="grid-buyer"
+                  type="text"
+                  placeholder="Item info"
+                  v-model="description"
+                > </textarea>
+              </div>
+
+              <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label
+                  class="
+                    block
+                    uppercase
+                    tracking-wide
+                    text-gray-700 text-xs
+                    font-bold
+                    mb-2
+                  "
+                  for="grid-first-name"
+                >
+                  Image Link
+                </label>
+                <input
+                  class="
+                    appearance-none
+                    block
+                    w-full
+                    bg-gray-200
+                    text-gray-700
+                    border border-red-500
+                    rounded
+                    py-3
+                    px-4
+                    mb-3
+                    leading-tight
+                    focus:outline-none focus:bg-white
+                  "
+                  id="grid-buyer"
+                  type="text"
+                  placeholder="Buyer"
+                  v-model="imageLink"
+                />
+              </div>
+            </div>
+            <div class="flex justify-center -mx-3 mb-6">
+              <button
+                class="
+                  transition
+                  delay-150
+                  duration-300
+                  ease-in-out
+                  hover:-translate-y-1 hover:scale-110
+                  shadow
+                  bg-red-500
+                  hover:bg-red-600
+                  focus:shadow-outline focus:outline-none
+                  text-white
+                  font-bold
+                  py-2
+                  px-2
+                  rounded
+                "
+                type="button"
+                @click="
+                  selling = false;
+                  this.$emit('updateItem', startNum, sold,fish,itemName,seller,buyer,soldFor,imageLinkItem,description );
+                "
+              >
+                Edit this item
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
     <div v-else @click="showImage = false">
-<img
-              class="flex justify-center object-cover cursor-zoom-out"
-              :src="imageLinkItem"
-              :alt="itemName"
-              @click="showImage = false"
-            />
+      <img
+        class="flex justify-center object-cover cursor-zoom-out"
+        :src="imageLinkItem"
+        :alt="itemName"
+        @click="showImage = false"
+      />
     </div>
   </div>
 </template>
@@ -300,7 +631,7 @@ export default {
     "startNum",
     "imageLink",
     "show",
-    "description"
+    "description",
   ],
   setup() {
     const theUser = userProfile();
@@ -317,13 +648,17 @@ export default {
       amount: "",
       selling: false,
       showImage: false,
+      editing: false,
+      itemDisplayedName: "",
     };
   },
   created() {},
   async mounted() {
-   // await this.getFish();
+    // await this.getFish();
     this.imageLinkItem = this.imageLink;
     this.loaded = true;
+    this.itemDisplayedName = this.itemName.split("%")[0];
+   // this.soldFor = parseInt(this.soldFor);
   },
   computed() {},
   methods: {
