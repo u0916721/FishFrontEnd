@@ -8,6 +8,7 @@ export const userProfile = defineStore('user',{
   state: () => ({
     userToken: null,
     userRole: undefined,
+    loggedIn: true, // True for now but can be changed
   }),
 
   getters: {
@@ -19,10 +20,24 @@ export const userProfile = defineStore('user',{
     setNewTokenValue(theUserToken) {
       this.userToken = theUserToken;
       localStorage.setItem("userToken",JSON.stringify(theUserToken));
+      localStorage.setItem("theDate", JSON.stringify(new Date())); // Store the date to check for login
     },
     setValueFromStorage()
     {
+      try{
       this.userToken = JSON.parse(localStorage.getItem("userToken"));
+      let loginDate = JSON.parse(localStorage.getItem("theDate"));
+      let currentDate = new Date();
+      var diff = Math.abs(currentDate - loginDate);
+      var minutes = Math.floor((diff/1000)/60);
+      if(minutes > 300)
+      {
+        this.loggedIn = false;
+      }}
+      catch(error)
+      {
+        this.loggedIn = false;
+      }
     },
     setSwagValue(newValue) {
       this.value = newValue;
