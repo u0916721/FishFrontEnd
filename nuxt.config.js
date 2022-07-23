@@ -14,7 +14,7 @@ export default defineNuxtConfig({
         author: 'Jens Phanich'
       },
       { hid: 'description', name: 'description', content: 'Host Aquarium Club Auctions' },
-      { hid: 'og:title', property: 'og:title', content: 'https://getscales.net/' },
+      { hid: 'og:title', property: 'og:title', content: 'host and participate in club auctions' },
       { hid: 'og:url', property: 'og:url', content: 'https://getscales.net/' },
       { hid: 'og:description', property: 'og:description', content: 'Host your own Aquarium Club Auction for your club that everyone can engage with, keep track of items being auctioned and sold items effortlessly.'},
       { hid: 'og:image', property: 'og:image', content: 'https://getscales.net/_nuxt/bettahuy-phan.a2ccffa1.jpg'},
