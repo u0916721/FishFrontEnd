@@ -527,7 +527,7 @@ export default {
           return response.text();
         })
         .then((result) => {
-          if(respone.ok)
+          if(responseOk)
           {
           let temp = this.items[index];
           var removed = this.items.splice(index, 1);
