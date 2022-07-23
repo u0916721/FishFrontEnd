@@ -86,7 +86,7 @@
         @keyup="this.$emit('filterItems', selected, searchString)"
         v-model="searchString"
       />
-       <button
+       <!-- <button
         class="
           transition
           delay-150
@@ -107,7 +107,7 @@
         @click="this.$emit('filterItems', selected, searchString)"
       >
         Apply Filter
-      </button>
+      </button> -->
     </div>
     
   </div>
