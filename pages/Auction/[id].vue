@@ -544,13 +544,14 @@ export default {
 
     filterItems(selection, searchString) {
       // lets not deal with varience in case
-      console.log("filtering");
       searchString = searchString.toLowerCase();
       let selectedItemArray = this.items;
       if (this.viewingAuctionedItems) {
-        let selectedItemArray = this.items;
+         selectedItemArray = this.items;
       } else {
-        let selectedItemArray = this.soldItems;
+        console.log("printing soldItems");
+        console.log(this.soldItems);
+         selectedItemArray = this.soldItems;
       }
       if (selection == "Item Name") {
         this.filterByName(selectedItemArray, searchString);
@@ -561,6 +562,7 @@ export default {
       } else if (selection == "Buyer") {
         this.filterByBuyer(selectedItemArray, searchString);
       }
+
     },
     filterByName(itemList, searchString) {
       for (let i = 0; i < itemList.length; i++) {
