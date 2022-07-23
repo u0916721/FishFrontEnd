@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center">
+  <div class="flex justify-center grid grid-cols-1">
     <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0">
       <label
         class="
@@ -56,12 +56,20 @@
         Get info
       </button>
       <div class="w-full px-3 mb-6 md:mb-0 py-2" v-if="displayStats">
-        <p class="text-center font-bold bg-green-800 text-white rounded-full"> Spent: ${{ spent }}</p>
+        <p class="text-center font-bold bg-green-800 text-white rounded-full">
+          Spent: ${{ spent }}
+        </p>
         <div class="pb-2"></div>
-        <p class="text-center font-bold bg-green-800 text-white rounded-full"> Made: ${{ made }}</p>
+        <p class="text-center font-bold bg-green-800 text-white rounded-full">
+          Made: ${{ made }}
+        </p>
         <div class="pb-2"></div>
         <div v-if="itemsBought.length > 0" class="pb-2">
-          <p class="text-center font-bold funBackGround text-white rounded-full">you have bought the following items</p>
+          <p
+            class="text-center font-bold funBackGround text-white rounded-full"
+          >
+            you have bought the following items
+          </p>
           <AuctAuction-Card
             v-for="(item, index) in itemsBought"
             :key="item.itemName + item.itemName + index"
@@ -77,11 +85,21 @@
             :show="true"
             :description="item.description"
           />
-         
         </div>
-         <div v-else class="pb-2"> <p class="text-center font-bold funBackGround text-white rounded-full">you have yet to buy anything</p></div>
+        <div v-else class="pb-2">
+          <p
+            class="text-center font-bold funBackGround text-white rounded-full"
+          >
+            you have yet to buy anything
+          </p>
+        </div>
         <div v-if="itemsSold.length > 0">
-          <p class="text-center font-bold funBackGround text-white rounded-full" v-if="itemsSold.length > 0">you have sold the following items</p>
+          <p
+            class="text-center font-bold funBackGround text-white rounded-full"
+            v-if="itemsSold.length > 0"
+          >
+            you have sold the following items
+          </p>
           <AuctAuction-Card
             v-for="(item, index) in itemsSold"
             :key="item.itemName + item.itemName + index"
@@ -93,13 +111,22 @@
             :sold="true"
             :admin="false"
             :startNum="index"
-            :imageLink="item.startNum - 1"
+            :imageLink="item.imageLink"
             :show="true"
             :description="item.description"
           />
         </div>
         <div v-if="userUnsoldItems.length > 0" class="pb-2">
-          <p class="text-center text-center font-bold funBackGround text-white rounded-full" v-if="userUnsoldItems.length > 0">
+          <p
+            class="
+              text-center text-center
+              font-bold
+              funBackGround
+              text-white
+              rounded-full
+            "
+            v-if="userUnsoldItems.length > 0"
+          >
             you have yet to sell the following items
           </p>
           <AuctAuction-Card
@@ -117,6 +144,45 @@
             :show="true"
             :description="item.description"
           />
+        </div>
+      </div>
+    </div>
+    <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0">
+      <label
+        class="
+          block
+          uppercase
+          tracking-wide
+          text-gray-700 text-xs
+          font-bold
+          mb-2
+        "
+        for="grid-first-name"
+      >
+        Select Type of Stat
+      </label>
+      <div class="w-full px-3 mb-6 md:mb-0 py-2">
+        <div class="relative" @click="getAdvancedStats">
+          <select v-model="selected">
+            <option disabled value="">Please select one</option>
+            <option>Most popular items</option>
+            <option>Items that have made the most money</option>
+          </select>
+          <div
+            class="
+              pointer-events-none
+              absolute
+              inset-y-0
+              right-0
+              flex
+              items-center
+              px-2
+              text-gray-700
+            "
+          ></div>
+        </div>
+        <div v-if="showAdvancedStats">
+          <AuctTest :yAxis="yAxis" :xAxis="xAxis" :label="chartLabel" />
         </div>
       </div>
     </div>
@@ -142,12 +208,81 @@ export default {
       itemsBought: [],
       itemsSold: [],
       userUnsoldItems: [],
+      chartLabel: "Chart label",
+      selected: "",
+      showAdvancedStats: false,
+      xAxis: [],
+      yAxis: [],
     };
   },
   created() {},
   mounted() {},
   computed() {},
   methods: {
+    containsItemName(name, objectArray) {
+      for (let i = 0; i < objectArray.length; i++) {
+        if (objectArray[i].itemName === name) {
+          return true;
+        }
+      }
+      return false;
+    },
+    getAdvancedStats() {
+      this.showAdvancedStats = false;
+      // Will probably want to use a delegate funtion or lambda to make code more readble and less DRY.
+      let amountItem = { itemName: "someName", itemAmount: 0 };
+      let objectArray = [];
+      // First loop gets all the items in the array.
+      //O(i*n) optimize later if needs be.
+      console.log(this.selected);
+      if (this.selected === "Items that have made the most money") {
+        for (let i = 0; i < this.soldItems.length; i++) {
+          if (this.containsItemName(this.soldItems[i].fish, objectArray)) {
+            // We need to increment the object array.
+            // First we find what index this object lives
+            for (let n = 0; n < objectArray.length; n++) {
+              // We have found where the object lives
+              if (objectArray[n].itemName === this.soldItems[i].fish) {
+                objectArray[n].itemAmount = objectArray[n].itemAmount + this.soldItems[i].soldFor;
+              }
+            }
+          } else {
+            objectArray.push({
+              itemName: this.soldItems[i].fish,
+              itemAmount: this.soldItems[i].soldFor,
+            }); // Add it into the array
+          }
+        }
+      } else if (this.selected === "Most popular items") {
+        for (let i = 0; i < this.soldItems.length; i++) {
+          if (this.containsItemName(this.soldItems[i].fish, objectArray)) {
+            // We need to increment the object array.
+            // First we find what index this object lives
+            for (let n = 0; n < objectArray.length; n++) {
+              // We have found where the object lives
+              if (objectArray[n].itemName === this.soldItems[i].fish) {
+                objectArray[n].itemAmount = objectArray[n].itemAmount + 1;
+              }
+            }
+          } else {
+            objectArray.push({
+              itemName: this.soldItems[i].fish,
+              itemAmount: 1,
+            }); // Add it into the array
+          }
+        }
+      }
+      objectArray.sort((a, b) => (a.itemAmount > b.itemAmount ? -1 : 1)); // Sort the array for organization
+
+      // Now we get the numbers out of the array.
+      for (let i = 0; i < objectArray.length; i++) {
+        this.xAxis[i] = objectArray[i].itemName;
+        this.yAxis[i] = objectArray[i].itemAmount;
+      }
+      console.log(this.xAxis);
+      console.log(this.yAxis);
+      this.showAdvancedStats = true;
+    },
     getStats() {
       this.displayStats = true;
       this.made = 0;
@@ -164,7 +299,7 @@ export default {
           this.made = this.made + this.soldItems[i].soldFor;
         }
         if (this.soldItems[i].buyer == this.auctionID) {
-            this.soldItems[i].startNum = i + 1;
+          this.soldItems[i].startNum = i + 1;
           this.itemsBought.push(this.soldItems[i]);
           // Also add it to the sold amount
           this.spent = this.spent + this.soldItems[i].soldFor;
@@ -172,13 +307,11 @@ export default {
       }
       // Now get users unsold items
       for (let i = 0; i < this.itemsYetToSell.length; i++) {
-   
         if (this.itemsYetToSell[i].seller == this.auctionID) {
-            this.itemsYetToSell[i].startNum = i + 1;
+          this.itemsYetToSell[i].startNum = i + 1;
           this.userUnsoldItems.push(this.itemsYetToSell[i]);
         }
       }
-      console.log("success");
     },
   },
 };

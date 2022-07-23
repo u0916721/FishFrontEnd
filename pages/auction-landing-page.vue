@@ -35,7 +35,7 @@ export default {
   async mounted() {
     this.theUser.setValueFromStorage();
     await this.getAllCliquesName(); // We get all the clique names. That the user has or doesnt have.
-    await this.getAllUserCliquesNames();
+   // await this.getAllUserCliquesNames();
     // Next we itterate through all the names adding it to an array, with each api call.
     this.cliquesToBrowse = [];
     for (const cliqueName of this.cliquesNames) {
@@ -116,7 +116,7 @@ export default {
         })
         .catch((error) => {
           console.log("error", error);
-          return null;
+          return error;
         });
       return result.PromiseResult;
     },

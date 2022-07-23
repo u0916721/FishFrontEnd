@@ -236,7 +236,11 @@ export default {
     await this.getItems();
     await this.getSoldItems();
     await this.getFishNames();
-    // setInterval(this.getItems, 10000);
+    if(!this.isAdmin || !this.theUser.loggedIn)
+    {
+     setInterval(this.refresh, 30000);
+    }
+    console.log("done computig");
   },
   computed() {},
   methods: {
@@ -414,7 +418,7 @@ export default {
             // Shallow change the array for the front end
             this.items[0].buyer = buyer;
             this.items[0].soldFor = amount;
-            this.soldItems.push(this.items[0]);
+            this.soldItems.splice(0,0,this.items[0]);
             this.items = this.items.slice(1); // Poping the first item from the array
             return result;
           } else {
@@ -456,6 +460,7 @@ export default {
         .catch((error) => console.log("error", error));
     },
     async deleteSoldItem(index) {
+      var responseOk;
       var myHeaders = new Headers();
       myHeaders.append("Authorization", "Bearer " + this.theUser.userToken);
 
@@ -472,10 +477,18 @@ export default {
           index,
         requestOptions
       )
-        .then((response) => response.text())
+        .then((response) => {
+          responseOk = response.ok;
+          return response.text();
+        })
         .then((result) => {
-          this.soldItems.splice(index, 1); // Poping the first item from the array
-          return result;
+          if (responseOk) {
+            this.soldItems.splice(index, 1); // Poping the first item from the array
+            return result;
+          } else {
+            window.alert("Unable to complete task, try logging in again");
+            return result;
+          }
         })
         .catch((error) => console.log("error", error));
     },
@@ -488,6 +501,7 @@ export default {
       }
     },
     async pushItemFront(itemName, index) {
+      var responseOk;
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
       myHeaders.append("Authorization", "Bearer " + this.theUser.userToken);
@@ -508,11 +522,22 @@ export default {
           "/PutItemFront",
         requestOptions
       )
-        .then((response) => response.text())
+        .then((response) => {
+          responseOk = response.ok;
+          return response.text();
+        })
         .then((result) => {
+          if(respone.ok)
+          {
           let temp = this.items[index];
           var removed = this.items.splice(index, 1);
           this.items.unshift(temp);
+          }
+          else
+          {
+            window.alert("Unable to complete task, try logging in again");
+            return result;
+          }
         })
         .catch((error) => console.log("error", error));
     },
@@ -642,19 +667,22 @@ export default {
           return response.text();
         })
         .then((result) => {
-          if(responseOk)
-          {
-          console.log("Printing the result");
-          console.log(result);
-          selectedItemArray[startNum].itemName = result;
-          return result;
-          }
-          else
-          {
+          if (responseOk) {
+            console.log("Printing the result");
+            console.log(result);
+            selectedItemArray[startNum].itemName = result;
+            return result;
+          } else {
             window.alert("Unable to edit on server, login in again");
           }
         })
         .catch((error) => console.log("error", error));
+    },
+        refresh()
+    {
+     this.getItems();
+     this.getSoldItems();
+     console.log("finished refreshing");
     },
   },
 };

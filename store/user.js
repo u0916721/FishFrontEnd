@@ -26,10 +26,13 @@ export const userProfile = defineStore('user',{
     {
       try{
       this.userToken = JSON.parse(localStorage.getItem("userToken"));
-      let loginDate = JSON.parse(localStorage.getItem("theDate"));
-      let currentDate = new Date();
+      let loginDate = new Date(JSON.parse(localStorage.getItem("theDate")));
+      let currentDate = new Date(JSON.parse(JSON.stringify(new Date())));
       var diff = Math.abs(currentDate - loginDate);
       var minutes = Math.floor((diff/1000)/60);
+      console.log(currentDate);
+      console.log(loginDate);
+      console.log(diff);
       if(minutes > 300)
       {
         this.loggedIn = false;

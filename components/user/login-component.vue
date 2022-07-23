@@ -21,10 +21,7 @@
     <div class="py-2"></div>
     <p class="font-mono text-center text-white text-4xl pb-4">Auction Host Login</p>
     <div v-if="loading">
-      <button type="button" class="bg-indigo-500 ..." disabled>
-        <svg class="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
-          <!-- ... -->
-        </svg>
+      <button type="button" class="bg-indigo-500 animate-bounce" disabled>
         Logging in...
       </button>
     </div>

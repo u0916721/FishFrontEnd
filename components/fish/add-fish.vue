@@ -1,7 +1,7 @@
 <template>
-  <div class="flex justify-center">
-    <form class="pl-2 w-full max-w-lg">
-      <div class="flex flex-wrap -mx-3 mb-6">
+  <div class="flex justify-center bg-blue-500 ">
+    <form class="pl-2 w-full max-w-lg  p-6">
+      <div class="flex flex-wrap -mx-3 mb-6 ">
         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
           <label
             class="
@@ -325,4 +325,21 @@ export default {
 </script>
 
 <style>
+.loadingSwag {
+  background: linear-gradient(-47deg, #0098f7, #ff0000, #1eff00, #c300ff);
+  background-size: 400% 400%;
+  animation: gradient 45s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
 </style>
