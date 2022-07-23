@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-center grid grid-cols-1">
-    <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0">
+  <div class="xl:flex xl:justify-center lg:flex lg:justify-center">
+    <div class="w-full md:w-1/4 px-3  place-content-center">
       <label
         class="
           block
