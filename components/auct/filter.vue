@@ -86,7 +86,30 @@
         @keyup="this.$emit('filterItems', selected, searchString)"
         v-model="searchString"
       />
+       <button
+        class="
+          transition
+          delay-150
+          duration-300
+          ease-in-out
+          hover:-translate-y-1 hover:scale-110
+          shadow
+          bg-green-600
+          hover:bg-green-700
+          focus:shadow-outline focus:outline-none
+          text-white
+          font-bold
+          py-2
+          px-2
+          rounded
+        "
+        type="button"
+        @click="this.$emit('filterItems', selected, searchString)"
+      >
+        Apply Filter
+      </button>
     </div>
+    
   </div>
 </template>
 

@@ -1,6 +1,7 @@
 
 <template>
   <div class="grid grid-cols-1 place-items-center">
+    <div class="pb-12"></div>
       <Finding-PageClique-Thumbnail 
         v-for="club in cliquesToBrowse"
         :key="club.name + club.name"

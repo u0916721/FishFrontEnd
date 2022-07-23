@@ -544,6 +544,7 @@ export default {
 
     filterItems(selection, searchString) {
       // lets not deal with varience in case
+      console.log("filtering");
       searchString = searchString.toLowerCase();
       let selectedItemArray = this.items;
       if (this.viewingAuctionedItems) {
