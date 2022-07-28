@@ -1,7 +1,31 @@
 <template>
   <div class="">
     <div class="px-4 grid grid-cols-3">
-      <div class="py-5"></div>
+          <div class="py-1"></div>
+        <button
+        class="
+          col-start-1 col-end-2
+          transition
+          delay-150
+          duration-300
+          rounded
+          w-96
+          bg-blue-500
+          hover:bg-blue-700
+          text-white
+          font-bold
+          py-2
+          px-4
+          rounded
+          ease-in-out
+          hover:-translate-y-1 hover:scale-110
+          shadow
+        "
+        @click="this.$router.push('/')"
+      >
+        Home
+      </button>
+      <div class="py-2 col-start-1 col-end-2"></div>
       <div
         class="
           px-2
