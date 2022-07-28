@@ -1,7 +1,9 @@
 
-<template>
-  <div class="grid grid-cols-1 place-items-center">
-    <div class="pb-12"></div>
+<template >
+  <div class="h-max grid grid-cols-1 place-items-center bg-gradient-to-r from-green-400 to-blue-500">
+    <div class="py-2"></div>
+    <div class="bg-white rounded-full px-4 font-bold colorSwagAuctionFinding"> Clubs</div>
+    <div class="py-2"></div>
       <Finding-PageClique-Thumbnail 
         v-for="club in cliquesToBrowse"
         :key="club.name + club.name"
@@ -9,6 +11,7 @@
         :bio="club.bio"
         :profilePic="club.profilePic"
       />
+      <div class="py-80"></div>
       </div>
 </template>
 
@@ -156,4 +159,21 @@ export default {
 };
 </script>
 <style>
+.colorSwagAuctionFinding {
+  background: linear-gradient(-47deg, #c9cc28, #d15171, #3eb4b8, #3b779c);
+  background-size: 400% 400%;
+  animation: gradient 5s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
 </style>

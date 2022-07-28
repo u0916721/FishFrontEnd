@@ -1,5 +1,7 @@
 <template>
-<div class="content-left max-w-sm rounded overflow-hidden shadow-lg transition delay-150 duration-300 md:ease-in-out  lg:ease-in-out  xl:ease-in-out  md:hover:scale-110 lg:hover:scale-110 xl:hover:scale-110 ">
+<div>
+  <div class="py-2"></div>
+<div class="content-left max-w-sm rounded overflow-hidden shadow-lg transition delay-150 duration-300 md:ease-in-out  lg:ease-in-out  xl:ease-in-out  md:hover:scale-110 lg:hover:scale-110 xl:hover:scale-110 py-2  colorSwagAuctionFinding">
   <img class="w-full" :src="profilePic">
   <div class="px-6 py-4">
     <div class="font-bold text-xl mb-2b">{{name}}</div>
@@ -12,6 +14,7 @@
       Enter
       </button>
   </div>
+</div>
 </div>
 </template>
  
