@@ -25,15 +25,15 @@
               loading="lazy"
             />
             <div class="px-6 py-4">
-              <div class="font-bold text-xl mb-1 text-center">
+              <div class="font-bold text-xl mb-1 text-center px-2 rounded-lg headerColorSwag">
                 {{ itemName.split('%')[0] }}
               </div>
-              <div class="font-medium text-xl mb-1">Seller - {{ seller }}</div>
-              <div class="font-medium text-xl mb-1">Fish - {{ fish }}</div>
-              <p class="text-gray-700 text-base">{{ description }}</p>
-              <p v-if="!sold" class="text-gray-700 text-base">
-                place in line - {{ startNum + 1 }}
+              <div class="font-medium text-xl mb-1"><b class="px-2 rounded-lg bg-blue-200">Seller</b> - {{ seller }} </div>
+              <div class="font-medium text-xl mb-1"><b class="px-2 rounded-lg bg-blue-200">Fish</b> - {{ fish }}</div>
+              <p v-if="!sold" class="font-medium text-xl mb-1">
+                <b class="px-2 rounded-lg bg-blue-200">Place in line</b>- {{ startNum + 1 }}
               </p>
+              <p class="text-black text-base overflow-y-auto h-30 rounded-lg bg-amber-100">{{ description }}</p>
             </div>
             <div v-if="admin" class="px-6 pt-4 pb-2">
               <button
@@ -146,9 +146,9 @@
               </div>
             </div>
             <div v-if="sold" class="px-6 pt-4 pb-2">
-              <div class="font-medium text-xl mb-1">buyer - {{ buyer }}</div>
+              <div class="font-medium text-xl mb-1"><b class="px-2 rounded-lg bg-blue-200">Buyer</b> - {{ buyer }}</div>
               <div class="font-medium text-xl mb-1">
-                Item sold for ${{ soldFor }}
+               <b class="px-2 rounded-lg bg-blue-200">Item Sold For </b> - ${{ soldFor }}
               </div>
             </div>
           </div>
@@ -606,9 +606,9 @@
         </div>
       </div>
     </div>
-    <div v-else @click="showImage = false">
+    <div v-else @click="showImage = false"    class="flex justify-center cursor-zoom-out">
       <img
-        class="flex justify-center object-cover cursor-zoom-out"
+      class="object-fill"
         :src="imageLinkItem"
         :alt="itemName"
         @click="showImage = false"
@@ -632,6 +632,7 @@ export default {
     "imageLink",
     "show",
     "description",
+    "size",
   ],
   setup() {
     const theUser = userProfile();
@@ -674,6 +675,7 @@ export default {
       )
         .then((response) => response.text())
         .then((result) => {
+          console.log("swagger");
           var theFish = JSON.parse(result);
           this.imageLinkItem = this.imageLink;
           this.fishInfo = "Size " + theFish.size + theFish.waterConditions;
@@ -690,6 +692,12 @@ export default {
   background: linear-gradient(-45deg, #60fcd5, #51f590, #8da7d8, #2eeb93);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
+}
+
+.headerColorSwag {
+  background: linear-gradient(-45deg, #88c5ff, #58afff, #8cc7ff, #58afff);
+  background-size: 400% 400%;
+  animation: gradient 30s ease infinite;
 }
 
 @keyframes gradient {
