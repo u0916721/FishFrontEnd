@@ -294,7 +294,6 @@ export default {
         .then((response) => {
           responseOk = response.ok;
           statusText = response.statusText;
-          console.log(response);
           return response.text();
         })
         .then((result) => {

@@ -675,7 +675,6 @@ export default {
       )
         .then((response) => response.text())
         .then((result) => {
-          console.log("swagger");
           var theFish = JSON.parse(result);
           this.imageLinkItem = this.imageLink;
           this.fishInfo = "Size " + theFish.size + theFish.waterConditions;

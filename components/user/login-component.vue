@@ -19,7 +19,9 @@
     "
   >
     <div class="py-2"></div>
-    <p class="font-mono text-center text-white text-4xl pb-4">Auction Host Login</p>
+    <p class="font-mono text-center text-white text-4xl pb-4">
+      Auction Host Login
+    </p>
     <div v-if="loading">
       <button type="button" class="bg-indigo-500 animate-bounce" disabled>
         Logging in...
@@ -187,8 +189,6 @@ export default {
     // This method logs in the user and makes a request to the backend to do so., also need to be tied to enter as well.
     async logIn() {
       this.loading = true;
-      console.log(this.username);
-      console.log(this.password);
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
 
@@ -219,9 +219,10 @@ export default {
             return response.text();
           })
           .then((result) => {
-            console.log("token parsed");
             this.loading = false;
-            return this.theUser.setNewTokenValue(JSON.parse(result).token); // Here we set the token value to the pinia store, We will also NEED to set the username and role here as well.
+            this.theUser.setNewTokenValue(JSON.parse(result).token);
+            this.theUser.saveUserNameAndPassword(this.username, this.password);
+            return result;
           })
           .catch((error) => {
             console.log("error", error);
