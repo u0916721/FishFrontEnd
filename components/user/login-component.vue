@@ -20,7 +20,7 @@
   >
     <div class="py-2"></div>
     <p class="font-mono text-center text-white text-4xl pb-4">
-      Auction Host Login
+      Login
     </p>
     <div v-if="loading">
       <button type="button" class="bg-indigo-500 animate-bounce" disabled>
@@ -98,7 +98,7 @@
           <div class="md:w-1/3"></div>
           <label class="md:w-2/3 block text-black font-bold">
             <div class="text-center">
-              <!-- <p class="text-black">
+              <p class="text-black">
                 Not a member?
                 <a
                   class="underline text-blue-600 hover:text-blue-700"
@@ -106,7 +106,7 @@
                   @click="register = true"
                   >Register</a
                 >
-              </p> -->
+              </p>
             </div>
           </label>
         </div>
@@ -136,7 +136,7 @@
               Log in
             </button>
             <div class="px-2 py-2"></div>
-            <!-- <button
+            <button
               class="
                 transition
                 delay-150
@@ -157,7 +157,7 @@
               @click="logIn"
             >
               Just Browse
-            </button> -->
+            </button>
             <div class="py-2"></div>
           </div>
         </div>
