@@ -240,8 +240,7 @@ export default {
     await this.getSoldItems();
     await this.getFishNames();
 
-    //  setInterval(this.refresh, 30000);
-    console.log("done computing");
+     setInterval(this.refresh, 30000);
   },
   computed() {},
   methods: {
