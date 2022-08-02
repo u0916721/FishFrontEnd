@@ -127,7 +127,6 @@ export default {
     };
   },
   async mounted() {
-    this.theUser.setValueFromStorage();
     // Now we need to get the approved and requested users.
     this.isRequestedUser();
     this.isApprovedUser();

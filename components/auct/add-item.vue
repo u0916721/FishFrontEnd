@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-center">
-    <form class="pl-2 w-full max-w-lg">
+  <div class="flex justify-center grid grid-cols-1">
+    <form class="px-4 w-full">
       <div class="flex flex-wrap -mx-3 mb-6">
         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
           <label
@@ -81,9 +81,11 @@
             "
             for="grid-last-name"
           >
-            Image Link
+            <p v-if="imageUpload">Upload image</p>
+            <p v-else>Image link</p>
           </label>
           <input
+            v-if="!imageUpload"
             class="
               appearance-none
               block
@@ -100,7 +102,42 @@
             type="text"
             placeholder="Image Link"
             v-model="imageLink"
+            @change="refreshDisplayedImage"
           />
+          <input
+            v-else
+            type="file"
+            id="input"
+            class="px-4 text-black py-4 border-2 border border-blue-500 rounded"
+            multiple
+            @change="imageUploaded"
+          />
+        </div>
+        <div class="px-2"></div>
+        <div class="py-1">
+          <button
+            class="
+              transition
+              delay-150
+              duration-300
+              ease-in-out
+              hover:-translate-y-1 hover:scale-110
+              shadow
+              bg-green-600
+              hover:bg-green-700
+              focus:shadow-outline focus:outline-none
+              text-white
+              font-bold
+              py-1
+              px-4
+              rounded
+            "
+            type="button"
+            @click="imageUpload = !imageUpload"
+          >
+            <p v-if="imageUpload">Use link from internet</p>
+            <p v-else>Upload your own image</p>
+          </button>
         </div>
         <div class="w-full md:w-1/2 px-3">
           <label
@@ -288,7 +325,7 @@
 <script>
 import { userProfile } from "~/store/user";
 export default {
-  props: ["totalItems", "fishNames","items"],
+  props: ["totalItems", "fishNames", "items"],
   setup() {
     const theUser = userProfile();
     return {
@@ -307,6 +344,8 @@ export default {
       description: "",
       selected: "",
       refreshKeyPreview: 100,
+      imageUpload: false,
+      imageSubmitted: false,
     };
   },
   created() {},
@@ -316,19 +355,67 @@ export default {
   },
   computed() {},
   methods: {
-    submitItem() {
+    refreshDisplayedImage() {
+      this.refreshKeyPreview = this.refreshKeyPreview + 1;
+    },
+    inputToURL(inputElement) {
+      var file = inputElement.files[0];
+      return window.URL.createObjectURL(file);
+    },
+
+    imageUploaded() {
+      console.log("calling image uplodaed");
+      const selectedFile = document.getElementById("input").files[0];
+      this.imageLink = this.inputToURL(document.getElementById("input"));
+      this.refreshKeyPreview = this.refreshKeyPreview + 1;
+      this.imageSubmitted = true;
+    },
+
+    s3ImageUpload(s3Link) {
+      console.log(s3Link);
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "image/jpeg");
+
+      var file = document.getElementById("input").files[0];
+
+      var requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: file,
+        redirect: "follow",
+      };
+
+      fetch(
+        s3Link,
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+    },
+    async submitItem() {
       console.log("calling submit item");
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
       myHeaders.append("Authorization", "Bearer " + this.theUser.userToken);
       var responseOk;
-      var raw = JSON.stringify({
-        itemName: this.itemName,
-        Fish: this.fish,
-        Description: this.description,
-        Seller: this.seller,
-        ImageLink: this.imageLink,
-      });
+      if (this.imageUpload) {
+        var raw = JSON.stringify({
+          itemName: this.itemName,
+          Fish: this.fish,
+          Description: this.description,
+          Seller: this.seller,
+          ImageLink: "userUpload",
+        });
+      } else {
+        var raw = JSON.stringify({
+          itemName: this.itemName,
+          Fish: this.fish,
+          Description: this.description,
+          Seller: this.seller,
+          ImageLink: this.imageLink,
+        });
+      }
 
       var requestOptions = {
         method: "POST",
@@ -337,7 +424,7 @@ export default {
         redirect: "follow",
       };
 
-      fetch(
+      await fetch(
         "https://plaxbackendapi.azurewebsites.net/Cliques/Auction/GSLAS/AddItem",
         requestOptions
       )
@@ -347,25 +434,30 @@ export default {
         })
         .then((result) => {
           if (responseOk) {
+            if(this.imageUpload)
+            {
+              console.log("uploading to s3");
+              this.s3ImageUpload(result); 
+            }
             // We can emit and clear the fields!.
             this.itemName = "";
             this.fish = "";
             this.description = "";
-           // this.seller = ""; lets not clear the seller so that we can add one after another
-            this.imageLink = "https://aquariumadviser.com/wp-content/uploads/2019/05/Exotic-and-Cool-Freshwater-Aquarium-Fish.jpg";
+            // this.seller = ""; lets not clear the seller so that we can add one after another
+            this.imageLink =
+              "https://aquariumadviser.com/wp-content/uploads/2019/05/Exotic-and-Cool-Freshwater-Aquarium-Fish.jpg";
             this.refreshKeyPreview = this.refreshKeyPreview + 1;
             console.log(raw);
-            this.$emit('addNewItem', raw);
+            this.$emit("addNewItem", raw);
           } else {
             alert("unable to add item try logging in again");
           }
           return result;
         })
         .catch((error) => alert(error));
-
     },
+
     getFishInfo() {
-      
       if (this.selected == "Select One" || this.selected == "") {
         return;
       }
@@ -385,7 +477,11 @@ export default {
         .then((response) => response.text())
         .then((result) => {
           let tempInfo = JSON.parse(result);
+          if(!this.imageUpload)
+          {
+            // We dont want to over the image upload
           this.imageLink = tempInfo.pictures[0];
+          }
           this.fish = tempInfo.name;
           this.itemName = tempInfo.name;
           this.description = tempInfo.size + " " + tempInfo.waterConditions;

@@ -43,7 +43,6 @@ export default {
     // Next we itterate through all the names adding it to an array, with each api call.
     this.cliquesToBrowse = [];
     for (const cliqueName of this.cliquesNames) {
-      console.log(cliqueName);
       await this.getCliqueByName(true, cliqueName); // Add it to the cliques to browse.
     }
 

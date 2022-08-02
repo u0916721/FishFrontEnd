@@ -29,7 +29,7 @@
     </button>
     <div class="pb-2"></div>
     <button
-      v-if="isAdmin && viewingAuctionedItems"
+      v-if="canAdd && viewingAuctionedItems"
       class="
         transition
         delay-150
@@ -223,27 +223,67 @@ export default {
       addItem: false,
       fishNames: [],
       displayAuctionStats: false,
+      canAdd: false,
     };
   },
   created() {},
   async mounted() {
     this.theUser.setValueFromStorage();
-    this.isAdmin = this.theUser.userToken != null; // Only admin will have or need JWT tokens. Admin still need valid tokens of course
-    console.log(this.theUser.loggedIn);
-    if (!this.theUser.loggedIn && this.isAdmin) {
+    this.canAdd = this.theUser.userToken != null; // User can also add items as well
+    this.isAdmin = await this.checkIfAdmin(); // Only admins can see things for swap and editing.
+    if (!(await this.theUser.isLoggedIn) && canAdd) {
       window.alert("You are logged out and need to log in again");
     }
+    console.log("is admin?");
+    console.log(await this.isAdmin);
     await this.getItems();
     await this.getSoldItems();
     await this.getFishNames();
-    if(!this.isAdmin || !this.theUser.loggedIn)
-    {
-     setInterval(this.refresh, 30000);
-    }
-    console.log("done computig");
+
+    //  setInterval(this.refresh, 30000);
+    console.log("done computing");
   },
   computed() {},
   methods: {
+    async checkIfAdmin() {
+      var admin = false;
+      var myHeaders = new Headers();
+      myHeaders.append("Authorization", "Bearer " + this.theUser.userToken);
+      console.log("printing usertoken");
+      console.log(this.theUser);
+      console.log("printing usertoken");
+      console.log(this.theUser.userToken);
+      var requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      };
+
+      await fetch(
+        "https://plaxbackendapi.azurewebsites.net/user/fishy/GetMyRole",
+        requestOptions
+      )
+        .then((response) => {
+          console.log(response);
+          return response.text();
+        })
+        .then((result) => {
+          console.log("printing result");
+          console.log(result);
+          console.log("printing result == club");
+          console.log(result === "Club");
+          console.log("printing result == baseUser");
+          console.log(result === "baseUser");
+          if (result === "Club") {
+            admin = true;
+          } else {
+            admin = false;
+          }
+          return result;
+        })
+        .catch((error) => console.log("error", error));
+      return admin;
+    },
     addNewItem(itemToAdd) {
       itemToAdd = JSON.parse(itemToAdd);
       itemToAdd.show = true;
@@ -418,7 +458,7 @@ export default {
             // Shallow change the array for the front end
             this.items[0].buyer = buyer;
             this.items[0].soldFor = amount;
-            this.soldItems.splice(0,0,this.items[0]);
+            this.soldItems.splice(0, 0, this.items[0]);
             this.items = this.items.slice(1); // Poping the first item from the array
             return result;
           } else {
@@ -527,14 +567,11 @@ export default {
           return response.text();
         })
         .then((result) => {
-          if(responseOk)
-          {
-          let temp = this.items[index];
-          var removed = this.items.splice(index, 1);
-          this.items.unshift(temp);
-          }
-          else
-          {
+          if (responseOk) {
+            let temp = this.items[index];
+            var removed = this.items.splice(index, 1);
+            this.items.unshift(temp);
+          } else {
             window.alert("Unable to complete task, try logging in again");
             return result;
           }
@@ -547,11 +584,11 @@ export default {
       searchString = searchString.toLowerCase();
       let selectedItemArray = this.items;
       if (this.viewingAuctionedItems) {
-         selectedItemArray = this.items;
+        selectedItemArray = this.items;
       } else {
         console.log("printing soldItems");
         console.log(this.soldItems);
-         selectedItemArray = this.soldItems;
+        selectedItemArray = this.soldItems;
       }
       if (selection == "Item Name") {
         this.filterByName(selectedItemArray, searchString);
@@ -562,7 +599,6 @@ export default {
       } else if (selection == "Buyer") {
         this.filterByBuyer(selectedItemArray, searchString);
       }
-
     },
     filterByName(itemList, searchString) {
       for (let i = 0; i < itemList.length; i++) {
@@ -681,11 +717,10 @@ export default {
         })
         .catch((error) => console.log("error", error));
     },
-        refresh()
-    {
-     this.getItems();
-     this.getSoldItems();
-     console.log("finished refreshing");
+    refresh() {
+      this.getItems();
+      this.getSoldItems();
+      console.log("finished refreshing");
     },
   },
 };
