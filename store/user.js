@@ -97,7 +97,7 @@ export const userProfile = defineStore('user', {
       this.username = JSON.parse(localStorage.getItem("username"));
       this.password = JSON.parse(localStorage.getItem("password"));
       if (this.userToken === null || this.userToken === "" || this.username === null || this.username === "") {
-        alert("you have been logged out please try logging in again");
+      //  alert("you are not logged in");
       }
       if (!this.isLoggedIn()) {
         this.relogin();
