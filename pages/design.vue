@@ -1,8 +1,8 @@
 <template>
   <div class="">
     <div class="px-4 grid grid-cols-3">
-          <div class="py-1"></div>
-        <button
+      <div class="py-1"></div>
+      <button
         class="
           col-start-1 col-end-2
           transition
@@ -289,7 +289,18 @@
       >
         The repos for both the frontend and backend are public, I tried to make
         the backend repo clear for those who haven't used .net core before, but
-        please read the readme to mitigate any potential security issues! Here are the links -> <NuxtLink class="text-blue-500 underline hover:text-blue-700" to="https://github.com/u0916721/FishFrontEnd">Front End</NuxtLink> <NuxtLink class="text-blue-500 underline hover:text-blue-700" to="https://github.com/u0916721/FishAuctionBackend">Back End</NuxtLink>
+        please read the readme to mitigate any potential security issues! Here
+        are the links ->
+        <NuxtLink
+          class="text-blue-500 underline hover:text-blue-700"
+          to="https://github.com/u0916721/FishFrontEnd"
+          >Front End</NuxtLink
+        >
+        <NuxtLink
+          class="text-blue-500 underline hover:text-blue-700"
+          to="https://github.com/u0916721/FishAuctionBackend"
+          >Back End</NuxtLink
+        >
       </div>
       <div class="py-5"></div>
     </div>
@@ -297,7 +308,55 @@
 </template>
 
 <script>
-export default {};
+export default {
+  setup() {
+    return {};
+  },
+  data() {
+    return {
+      name: "",
+      pictures:
+        "https://aquariumadviser.com/wp-content/uploads/2019/05/Exotic-and-Cool-Freshwater-Aquarium-Fish.jpg",
+      carelink: "",
+      size: "",
+      maintenance: "",
+      waterConditions: "",
+    };
+  },
+  created() {},
+  mounted() {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        console.log(pos.coords.latitude + "," + pos.coords.longitude);
+        this.addHit(pos.coords.latitude + "," + pos.coords.longitude);
+      },
+      (err) => {
+        this.addHit("Location not shared ");
+        console.log("error");
+      }
+    );
+  },
+  computed() {},
+  methods: {
+    addHit(info) {
+      var myHeaders = new Headers();
+
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        redirect: "follow",
+      };
+
+      fetch(
+        "https://plaxbackendapi.azurewebsites.net/user/Jens/" + info + "/addVistInfo",
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+    },
+  },
+};
 </script>
 
 <style>
