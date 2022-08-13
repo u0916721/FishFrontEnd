@@ -345,7 +345,7 @@ export default {
     },
     addHit(info) {
       var myHeaders = new Headers();
-
+      info = info + ""; // To stirng
       var requestOptions = {
         method: "POST",
         headers: myHeaders,
