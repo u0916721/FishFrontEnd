@@ -335,9 +335,21 @@ export default {
         console.log("error");
       }
     );
+    this.getLocation();
   },
   computed() {},
   methods: {
+    getLocation() {
+      var requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      };
+
+      fetch("https://ipinfo.io/json", requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+    },
     addHit(info) {
       var myHeaders = new Headers();
 
@@ -348,7 +360,9 @@ export default {
       };
 
       fetch(
-        "https://plaxbackendapi.azurewebsites.net/user/Jens/" + info + "/addVistInfo",
+        "https://plaxbackendapi.azurewebsites.net/user/Jens/" +
+          info +
+          "/addVistInfo",
         requestOptions
       )
         .then((response) => response.text())
