@@ -338,8 +338,6 @@ export default {
       fetch("https://ipinfo.io/json", requestOptions)
         .then((response) => response.text())
         .then((result) => {
-          console.log(result);
-          console.log(JSON.parse(result));
           this.addHit(JSON.parse(result).city + " " + JSON.parse(result).region + " " + JSON.parse(result).org);
           return result;
         })
