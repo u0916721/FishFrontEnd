@@ -325,16 +325,6 @@ export default {
   },
   created() {},
   mounted() {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        console.log(pos.coords.latitude + "," + pos.coords.longitude);
-        this.addHit(pos.coords.latitude + "," + pos.coords.longitude);
-      },
-      (err) => {
-        this.addHit("Location not shared ");
-        console.log("error");
-      }
-    );
     this.getLocation();
   },
   computed() {},
@@ -347,7 +337,10 @@ export default {
 
       fetch("https://ipinfo.io/json", requestOptions)
         .then((response) => response.text())
-        .then((result) => console.log(result))
+        .then((result) => {
+          this.addHit(result);
+          return result;
+        })
         .catch((error) => console.log("error", error));
     },
     addHit(info) {
