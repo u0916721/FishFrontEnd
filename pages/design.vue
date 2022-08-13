@@ -340,7 +340,7 @@ export default {
         .then((result) => {
           console.log(result);
           console.log(JSON.parse(result));
-          this.addHit(result);
+          this.addHit(JSON.parse(result).city + " " + JSON.parse(result).region);
           return result;
         })
         .catch((error) => console.log("error", error));
