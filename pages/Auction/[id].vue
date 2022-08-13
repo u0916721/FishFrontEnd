@@ -1,6 +1,30 @@
 <template>
   <div class="grid grid-cols-1 colorSwag">
-    <button
+    <button v-if="isAdmin"
+      class="
+        transition
+        delay-150
+        duration-300
+        ease-in-out
+        hover:-translate-y-1 hover:scale-110
+        shadow
+        bg-green-600
+        hover:bg-green-700
+        focus:shadow-outline focus:outline-none
+        text-white
+        font-bold
+        py-2
+        px-2
+        rounded
+      "
+      type="button"
+      @click="goToTools"
+    >
+    Auction Tools
+    
+    </button>
+        <div class="pb-2"></div>
+     <button  
       class="
         transition
         delay-150
@@ -23,7 +47,7 @@
         addItem = false;
         displayAuctionStats = false;
       "
-    >
+    >   
       <div v-if="viewingAuctionedItems > 0">switch to sold items</div>
       <div v-else>switch to items being auctioned</div>
     </button>
@@ -231,9 +255,10 @@ export default {
     this.theUser.setValueFromStorage();
     this.canAdd = this.theUser.userToken != null; // User can also add items as well
     this.isAdmin = await this.checkIfAdmin(); // Only admins can see things for swap and editing.
-    if (!(await this.theUser.isLoggedIn) && canAdd) {
-      window.alert("You are logged out and need to log in again");
-    }
+    //This is a bug need to fix later on.
+    // if (!(await this.theUser.isLoggedIn) && this.canAdd) {
+     //  window.alert("You are logged out and need to log in again");
+    // }
     console.log("is admin?");
     console.log(await this.isAdmin);
     await this.getItems();
@@ -244,6 +269,12 @@ export default {
   },
   computed() {},
   methods: {
+    goToTools()
+    {
+      //this.$router.push("/Auction/Tools/" + this.$route.params.id + "");
+     // raw js solution since the above code does not work for some reason
+     window.location.href = "Tools/" + this.$route.params.id;
+    },
     async checkIfAdmin() {
       var admin = false;
       var myHeaders = new Headers();
