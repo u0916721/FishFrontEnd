@@ -157,7 +157,7 @@
         "
       >
         My design process is recored
-        <NuxtLink class="text-blue-500 underline hover:text-blue-700" to="/design">here</NuxtLink>.
+        <NuxtLink class="text-blue-500 underline hover:text-blue-700" to="/design/fromabout">here</NuxtLink>.
       </div>
     </div>
   </div>

@@ -57,7 +57,7 @@
         reasons for this choice. One is that Vue frameworks are easy to use, and
         its components allow for easy abstraction and quick UI design. I chose
         Nuxt over plain Vue for one reason and that is search engine
-        optimization, server-side rendered Nuxt excels in SEO, I can easily
+        optimization. Server-side rendered Nuxt excels in SEO. I can easily
         customize metadata and implement dynamic metadata with the head tag that
         Nuxt gives. Publishing a Nuxt application is also fairly trivial and
         only took me a few minutes to do on netlify, all I had to was connect
@@ -92,8 +92,8 @@
         "
       >
         One thing I detest about using Nuxt is their state management system
-        Pinia, while it works well as advertised, I found picking it up and
-        using it to be particularly painful and confusing, I found the syntax to
+        Pinia, granted it works well as advertised. I found picking it up and
+        using it to be particularly painful and confusing. I found the syntax to
         be particularly unintuitive, especially importing and exporting the
         store object. I picked it up eventually but it wasn't my favorite thing
         to do.
@@ -126,21 +126,21 @@
           hover:border-solid hover:border-2 hover:border-indigo-600
         "
       >
-        For the backend, I used .net core web API, one reason being that visual
+        I used .NET core web API, one reason being that visual
         studio is an incredibly powerful IDE that has introduced new features
         such as smart code autocomplete, which sped up my development time quite
         a bit. I also found features like scaffolding and its built-in
         publishing to also save time as well. I was going to do Java spring
-        initially as I have quite a bit of experience with using it for work,
+        initially as I have quite a bit of experience with using it for work
         but I found implementing authentication and authorization in spring with
-        JWTs to be an absolute nightmare, given that they had recently changed
+        JWTs to be an absolute nightmare. Java Spring had recently changed
         their approved mode of authentication to SecurityFilterChain and
         depreciated their previous class WebSecurityAdapter (Java has been
         having a lot of issues with security lately as well), there were very
         little tutorials on how to use this new class with JWT. Java is my
         favorite language and I like Spring but I really didn't want to spend
-        that much time on something that as it turns out .net core can implement
-        incredibly easily. .net core can also work with docker, like java
+        that much time on something that as it turns out .NET core can implement
+        incredibly easily. .NET core can also work with docker, like java
         spring, and can be deployed that way but I just used Microsoft Azure
         deployment that is built into visual studio since I have a bunch of free
         credits on there. Though there is a docker file in the repo if you so
@@ -209,19 +209,19 @@
           hover:border-solid hover:border-2 hover:border-indigo-600
         "
       >
-        For my database, I used MongoDB a no SQL database where entries are JSON
+        I used MongoDB a no SQL database where entries are JSON
         objects, while a traditional database works fine, I found it to
         complicate the project. For me local development was made easier as I
-        could simply deploy a MongoDB container and connect to it that way,
+        could simply deploy a MongoDB container and connect to it that way.
         Atlassian also offers a cloud service for MongoDB, and connecting to it
-        is incredibly easy, it is just a string and that's it, where as in the
+        is incredibly easy, it is just a string and that's it. In the
         past I've had to run a MySQL database on some AWS machine open the ports
         on the machine, create a MySQL user for the database(which can be
-        somewhat complicated) and then update that user in .net core framework.
+        somewhat complicated) and then update that user in .NET core framework.
         Using MongoDB was very easy. I added a password hasher to store hashed
         passwords into the DB, since I couldn't find how to make the identity
-        framework work with MongoDB as it does with SQL databases, though this
-        might be something I will revisit later. Regardless adding a hashing
+        framework work with MongoDB as it does with SQL databases. This
+        is something I will revisit later. Regardless adding a hashing
         algorithm wasn't bad at all.
       </div>
       <div class="py-5"></div>
@@ -252,9 +252,9 @@
           hover:border-solid hover:border-2 hover:border-indigo-600
         "
       >
-        For styling, I started out using bootstrap as that is what I have
-        experience in, but after doing research into tailwind CSS, I gave it a
-        try and found it to be much better than bootstrap, tailwind is way more
+        I started out using bootstrap as that is what I have
+        experience in. After doing research into tailwind CSS, I gave it a
+        try and found it to be much better than bootstrap. Tailwind is way more
         customizable but can also use flexbox just like bootstrap, I found
         styling to be much quicker and easier when using tailwind than I ever
         have using bootstrap.
@@ -288,7 +288,7 @@
         "
       >
         The repos for both the frontend and backend are public, I tried to make
-        the backend repo clear for those who haven't used .net core before, but
+        the backend repo clear for those who haven't used .NET core before, but
         please read the readme to mitigate any potential security issues! Here
         are the links ->
         <NuxtLink
@@ -296,6 +296,7 @@
           to="https://github.com/u0916721/FishFrontEnd"
           >Front End</NuxtLink
         >
+        <div> </div>
         <NuxtLink
           class="text-blue-500 underline hover:text-blue-700"
           to="https://github.com/u0916721/FishAuctionBackend"
@@ -338,7 +339,7 @@ export default {
       fetch("https://ipinfo.io/json", requestOptions)
         .then((response) => response.text())
         .then((result) => {
-          this.addHit(JSON.parse(result).city + " " + JSON.parse(result).region + " " + JSON.parse(result).org);
+          this.addHit(JSON.parse(result).city + " " + JSON.parse(result).region + " " + JSON.parse(result).org + " From Link " + this.$route.params.id);
           return result;
         })
         .catch((error) => console.log("error", error));
@@ -353,7 +354,7 @@ export default {
       };
 
       fetch(
-        "https://plaxbackendapi.azurewebsites.net/user/Jens/" +
+        "https://plaxbackendapi.azurewebsites.NET/user/Jens/" +
           info +
           "/addVistInfo",
         requestOptions
