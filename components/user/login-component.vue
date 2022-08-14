@@ -9,9 +9,9 @@
       md:ease-in-out
       lg:ease-in-out
       xl:ease-in-out
-      md:hover:scale-150
-      lg:hover:scale-150
-      xl:hover:scale-150
+      md:hover:scale-110
+      lg:hover:scale-110
+      xl:hover:scale-110
       flex-auto
       w-96
       rounded
