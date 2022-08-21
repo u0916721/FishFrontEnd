@@ -1,4 +1,7 @@
 <template>
+<div>
+<div v-if="loading" class="py-24
+      bg-auto bg-no-repeat bg-center bg-[url('~/assets/loading.gif')]"></div>
   <div class="flex justify-center grid grid-cols-1">
     <form class="px-4 w-full">
       <div class="flex flex-wrap -mx-3 mb-6">
@@ -320,6 +323,7 @@
       />
     </div>
   </div>
+  </div>
 </template>
 
 <script>
@@ -346,6 +350,7 @@ export default {
       refreshKeyPreview: 100,
       imageUpload: false,
       imageSubmitted: false,
+      loading: false,
     };
   },
   created() {},
@@ -394,6 +399,7 @@ export default {
         .catch((error) => console.log("error", error));
     },
     async submitItem() {
+      this.loading = true;
       console.log("calling submit item");
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
@@ -437,6 +443,7 @@ export default {
             if(this.imageUpload)
             {
               console.log("uploading to s3");
+              console.log(result);
               this.s3ImageUpload(result); 
             }
             // We can emit and clear the fields!.
@@ -455,6 +462,7 @@ export default {
           return result;
         })
         .catch((error) => alert(error));
+          this.loading = false;
     },
 
     getFishInfo() {
