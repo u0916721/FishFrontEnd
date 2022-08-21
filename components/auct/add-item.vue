@@ -357,6 +357,8 @@ export default {
   mounted() {
     this.theUser.setValueFromStorage();
     console.log("loading comp");
+    this.loading = true;
+    this.loading = false;
   },
   computed() {},
   methods: {
